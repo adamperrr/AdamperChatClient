@@ -50,50 +50,28 @@ public class AdamperChat extends javax.swing.JFrame {
     initComponents();
   }
 
-  public void chatMsgIncomingReader(String userName, String msg) {
-    mainTextArea.append(username + ": " + msg + "\n");
+  public void connect() {
+    if (isConnected == false) {
+      try {
+        sock = new Socket(address, port);
+        InputStreamReader streamreader = new InputStreamReader(sock.getInputStream());
+        reader = new BufferedReader(streamreader);
+        writer = new PrintWriter(sock.getOutputStream());
+        writer.println(username + ":has connected.:Connect");
+        writer.flush();
+        isConnected = true;
+      } 
+	  catch (Exception ex) {
+        mainTextArea.append("Cannot Connect! Try Again. \n");
+      }
+
+      ListenThread();
+
+    } else if (isConnected == true) {
+      mainTextArea.append("You are already connected. \n");
+    }
   }  
   
-  public void connectIncomingReader(String userName) {
-    mainTextArea.removeAll();
-    addUser(userName);
-  }
-
-  public void disconnectIncomingReader(String userName) {
-    removeUser(userName);
-  }
-
-  public void doneIncomingReader(String userName) {
-    writeUsers();
-    users.clear();
-  }
-
-  public void addUser(String userName) {
-    users.add(userName);
-  }
-
-  public void removeUser(String userName) {
-    mainTextArea.append(userName + " is now offline.\n");
-  }
-
-  public void writeUsers() {
-    String[] tempList = new String[(users.size())];
-    users.toArray(tempList);
-    for (String token : tempList) {
-      //users.append(token + "\n");
-    }
-  }
-
-  public String getReaderLine() throws IOException {
-    return reader.readLine();
-  }
-
-  public void ListenThread() {
-    IncomingReader tempIR = new IncomingReader(this);
-    Thread IncomingReader = new Thread(tempIR);
-    IncomingReader.start();
-  }
-
   public void disconnect() {
     try {
       mainTextArea.append("Disconnected.\n");
@@ -102,8 +80,6 @@ public class AdamperChat extends javax.swing.JFrame {
       mainTextArea.append("Failed to disconnect. \n");
     }
     isConnected = false;
-//        tf_username.setEditable(true);
-
   }
 
   public void sendDisconnect() {
@@ -116,31 +92,41 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public void connect() {
-    if (isConnected == false) {
-//		username = tf_username.getText();
-//		tf_username.setEditable(false);
-
-      try {
-        sock = new Socket(address, port);
-        InputStreamReader streamreader = new InputStreamReader(sock.getInputStream());
-        reader = new BufferedReader(streamreader);
-        writer = new PrintWriter(sock.getOutputStream());
-        writer.println(username + ":has connected.:Connect");
-        writer.flush();
-        isConnected = true;
-      } catch (Exception ex) {
-        mainTextArea.append("Cannot Connect! Try Again. \n");
-//			tf_username.setEditable(true);
-      }
-
-      ListenThread();
-
-    } else if (isConnected == true) {
-      mainTextArea.append("You are already connected. \n");
-    }
+  public void chatMsgIncomingReader(String userName, String msg) {
+    mainTextArea.append(username + ": " + msg + "\n");
+  }  
+  
+  public void connectIncomingReader(String userName) {
+    mainTextArea.removeAll();
+    addUserIncomingReader(userName);
   }
 
+  public void disconnectIncomingReader(String userName) {
+    removeUserIncomingReader(userName);
+  }
+
+  public void doneIncomingReader(String userName) {
+    users.clear();
+  }
+
+  public void addUserIncomingReader(String userName) {
+    users.add(userName);
+  }
+
+  public void removeUserIncomingReader(String userName) {
+    mainTextArea.append(userName + " is now offline.\n");
+  }
+
+  public String getReaderLine() throws IOException {
+    return reader.readLine();
+  }
+
+  public void ListenThread() {
+    IncomingReader tempIR = new IncomingReader(this);
+    Thread IncomingReader = new Thread(tempIR);
+    IncomingReader.start();
+  }
+  
   /**
    * This method is called from within the constructor to initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is always
@@ -169,7 +155,6 @@ public class AdamperChat extends javax.swing.JFrame {
     jScrollPane1.setViewportView(mainTextArea);
 
     logoutBtn.setText("Wyloguj");
-    logoutBtn.setActionCommand("Wyloguj");
     logoutBtn.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         logoutBtnActionPerformed(evt);

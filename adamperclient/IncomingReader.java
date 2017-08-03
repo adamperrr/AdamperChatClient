@@ -28,7 +28,9 @@ public class IncomingReader implements Runnable {
           mainFrame.doneIncomingReader(data[0]);
         }
       }
-    } catch (Exception ex) {
+    }
+	catch (Exception ex) {
+		
     }
   }
 
