@@ -1,5 +1,7 @@
 package adamperclient;
 
+import msg.*;
+
 public class IncomingReader implements Runnable {
 
   public IncomingReader(javax.swing.JFrame form) {
@@ -9,23 +11,25 @@ public class IncomingReader implements Runnable {
   @Override
   public void run() {
     String[] data;
-    String stream, done = "Done", connect = "Connect", disconnect = "Disconnect", chat = "Chat";
+    String stream;
 
     try {
       while ((stream = _mainFrame.getReaderLine()) != null) {
-        data = stream.split(":");
+        Message tempMsg = new Message(stream);
 
-        if (data[2].equals(chat)) {
-          _mainFrame.chatMsgIncomingReader(data[0], data[1]);
-        }
-        else if (data[2].equals(connect)) {
-          _mainFrame.connectIncomingReader(data[0]);
-        }
-        else if (data[2].equals(disconnect)) {
-          _mainFrame.disconnectIncomingReader(data[0]);
-        }
-        else if (data[2].equals(done)) {
-          _mainFrame.doneIncomingReader();
+        switch(tempMsg.getType()) {
+          case Chat:
+            _mainFrame.chatMsgIncomingReader(tempMsg.getUsername(), tempMsg.getContent());
+          break;
+          case Connect:
+            _mainFrame.connectIncomingReader(tempMsg.getUsername());
+          break;
+          case Disconnect:
+            _mainFrame.disconnectIncomingReader(tempMsg.getUsername());
+          break;
+          case Done:
+            _mainFrame.doneIncomingReader();
+          break;
         }
       }
     }
