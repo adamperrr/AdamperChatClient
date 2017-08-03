@@ -206,7 +206,7 @@ public class AdamperChat extends javax.swing.JFrame {
     setMinimumSize(new java.awt.Dimension(410, 320));
     setPreferredSize(new java.awt.Dimension(410, 320));
 
-    logoutBtn.setText("Wyloguj");
+    logoutBtn.setText("Rozłącz");
     logoutBtn.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         logoutBtnActionPerformed(evt);
