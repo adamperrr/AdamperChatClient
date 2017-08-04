@@ -10,31 +10,29 @@ public class IncomingReader implements Runnable {
 
   @Override
   public void run() {
-    String[] data;
     String stream;
 
     try {
       while ((stream = _mainFrame.getReaderLine()) != null) {
         Message tempMsg = new Message(stream);
 
-        switch(tempMsg.getType()) {
+        switch (tempMsg.getType()) {
           case Chat:
             _mainFrame.chatMsgIncomingReader(tempMsg.getUsername(), tempMsg.getContent());
-          break;
+            break;
           case Connect:
             _mainFrame.connectIncomingReader(tempMsg.getUsername());
-          break;
+            break;
           case Disconnect:
             _mainFrame.disconnectIncomingReader(tempMsg.getUsername());
-          break;
+            break;
           case Done:
             _mainFrame.doneIncomingReader();
-          break;
+            break;
         }
       }
-    }
-	catch (Exception ex) {
-		
+    } catch (Exception ex) {
+
     }
   }
 

@@ -12,9 +12,6 @@ import msg.*;
 
 public class AdamperChat extends javax.swing.JFrame {
 
-  /**
-   * @param args the command line arguments
-   */
   public static void main(String args[]) {
     /* Set the Nimbus look and feel */
     //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -49,9 +46,6 @@ public class AdamperChat extends javax.swing.JFrame {
 
   }
 
-  /**
-   * Creates new form AdamperClient
-   */
   public AdamperChat() {
     initComponents();
     this.getRootPane().setDefaultButton(sendBtn); // Send as a main button
@@ -100,34 +94,10 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public void connect() {
-    if (_isConnected == false) {
-      try {
-        _sock = new Socket(_address, _port);
-        InputStreamReader streamreader = new InputStreamReader(_sock.getInputStream());
-        _reader = new BufferedReader(streamreader);
-        _writer = new PrintWriter(_sock.getOutputStream());
-        
-        Message tempMsg = new Message(MsgType.Connect, _username, "połączył się.");
-        _writer.println(tempMsg.getMessage());
-        
-        _writer.flush();
-        _isConnected = true;
-      } catch (Exception ex) {
-        appendMsg("Błąd połączenia. Spróbuj ponownie... \n");
-      }
-
-      ListenThread();
-
-    } else if (_isConnected == true) {
-      appendMsg("Jesteś już połączony... \n");
-    }
-  }
-
   public void disconnect() {
     try {
       appendMsg("Rozłączono\n");
-      _sock.close();
+      _socket.close();
     } catch (Exception ex) {
       appendMsg("Rozłączenie nie powiodło się... \n");
     }
@@ -136,13 +106,22 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public void sendDisconnect() {
     Message tempMsg = new Message(MsgType.Disconnect, _username, "");
-    String text = tempMsg.getMessage();
     try {
-      _writer.println(text);
+      _writer.println(tempMsg.getMessage());
       _writer.flush();
     } catch (Exception e) {
       appendMsg("Błąd wysyłania wiadomości o rozłączeniu... \n");
     }
+  }
+
+  public String getReaderLine() throws IOException {
+    return _reader.readLine();
+  }
+
+  public void ListenThread() {
+    IncomingReader tempIR = new IncomingReader(this);
+    Thread IncomingReader = new Thread(tempIR);
+    IncomingReader.start();
   }
 
   public void chatMsgIncomingReader(String username, String message) {
@@ -172,18 +151,8 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public void removeUserIncomingReader(String username) {
     appendMsg(username + " jest teraz offline.\n");
-  }
-
-  public String getReaderLine() throws IOException {
-    return _reader.readLine();
-  }
-
-  public void ListenThread() {
-    IncomingReader tempIR = new IncomingReader(this);
-    Thread IncomingReader = new Thread(tempIR);
-    IncomingReader.start();
-  }
-
+  }  
+  
   /**
    * This method is called from within the constructor to initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is always
@@ -306,7 +275,27 @@ public class AdamperChat extends javax.swing.JFrame {
   }//GEN-LAST:event_sendBtnActionPerformed
 
   private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
-    connect();
+    if (!_isConnected) {
+      try {
+        _socket = new Socket(_address, _port);
+        InputStreamReader streamreader = new InputStreamReader(_socket.getInputStream());
+        _reader = new BufferedReader(streamreader);
+        _writer = new PrintWriter(_socket.getOutputStream());
+
+        Message tempMsg = new Message(MsgType.Connect, _username, "połączył się.");
+        _writer.println(tempMsg.getMessage());
+
+        _writer.flush();
+        _isConnected = true;
+      } catch (Exception ex) {
+        appendMsg("Błąd połączenia. Spróbuj ponownie... \n");
+      }
+
+      ListenThread();
+
+    } else if (_isConnected) {
+      appendMsg("Jesteś już połączony... \n");
+    }
   }//GEN-LAST:event_connectBtnActionPerformed
 
   Random _randGen = new Random();
@@ -317,7 +306,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private int _port = 2222;
   private boolean _isConnected = false;
 
-  private Socket _sock;
+  private Socket _socket;
   private BufferedReader _reader;
   private PrintWriter _writer;
 
