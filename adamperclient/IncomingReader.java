@@ -27,7 +27,7 @@ public class IncomingReader implements Runnable {
             _mainFrame.disconnectIncomingReader(tempMsg.getUsername());
             break;
           case Done:
-            _mainFrame.doneIncomingReader();
+            _mainFrame.doneIncomingReader(tempMsg.getUsername());
             break;
         }
       }
