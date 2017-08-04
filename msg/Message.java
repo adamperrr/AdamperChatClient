@@ -114,12 +114,7 @@ public class Message {
   }
 
   private void setContent(String content) {
-    if (isBlank(content) || _type == MsgType.Error) {
-    // If string is blank or other function already set Error Type
-      setErrorType();
-    } else {
-      _content = content.trim();
-    }
+    _content = content.trim();
   }
 
   private void buildMessage() {
