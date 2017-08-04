@@ -52,7 +52,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public void appendMsg(String inputText) {
-    StyledDocument doc = mainputTextArea.getStyledDocument();
+    StyledDocument doc = mainTextArea.getStyledDocument();
     inputText = inputText.trim() + "\n";
     try {
       doc.insertString(doc.getLength(), inputText, null);
@@ -62,7 +62,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public void appendUserMsg(String username, String inputText) {
-    StyledDocument doc = mainputTextArea.getStyledDocument();
+    StyledDocument doc = mainTextArea.getStyledDocument();
     username = username.trim() + ": ";
     inputText = inputText.trim() + "\n";
 
@@ -78,7 +78,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public void appendThisUserMsg(String inputText) {
-    StyledDocument doc = mainputTextArea.getStyledDocument();
+    StyledDocument doc = mainTextArea.getStyledDocument();
     String username = _username.trim() + ": ";
     inputText = inputText.trim() + "\n";
 
@@ -133,7 +133,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public void connectIncomingReader(String username) {
-    mainputTextArea.removeAll();
+    mainTextArea.removeAll();
     addUserIncomingReader(username);
   }
 
@@ -168,7 +168,7 @@ public class AdamperChat extends javax.swing.JFrame {
     sendBtn = new javax.swing.JButton();
     connectBtn = new javax.swing.JButton();
     jScrollPane2 = new javax.swing.JScrollPane();
-    mainputTextArea = new javax.swing.JTextPane();
+    mainTextArea = new javax.swing.JTextPane();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Chat - Adamper");
@@ -198,7 +198,7 @@ public class AdamperChat extends javax.swing.JFrame {
       }
     });
 
-    jScrollPane2.setViewportView(mainputTextArea);
+    jScrollPane2.setViewportView(mainTextArea);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -320,7 +320,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private javax.swing.JButton connectBtn;
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JButton logoutBtn;
-  private javax.swing.JTextPane mainputTextArea;
+  private javax.swing.JTextPane mainTextArea;
   private javax.swing.JLabel messageFieldLabel;
   private javax.swing.JTextField messageTextField;
   private javax.swing.JButton sendBtn;
