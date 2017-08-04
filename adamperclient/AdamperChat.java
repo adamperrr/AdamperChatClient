@@ -57,36 +57,36 @@ public class AdamperChat extends javax.swing.JFrame {
     this.getRootPane().setDefaultButton(sendBtn); // Send as a main button
   }
 
-  public void appendMsg(String inText) {
-    StyledDocument doc = mainTextArea.getStyledDocument();
-    inText = inText.trim() + "\n";
+  public void appendMsg(String inputText) {
+    StyledDocument doc = mainputTextArea.getStyledDocument();
+    inputText = inputText.trim() + "\n";
     try {
-      doc.insertString(doc.getLength(), inText, null);
+      doc.insertString(doc.getLength(), inputText, null);
     } catch (Exception e) {
       System.out.println(e);
     }
   }
 
-  public void appendUserMsg(String username, String inText) {
-    StyledDocument doc = mainTextArea.getStyledDocument();
+  public void appendUserMsg(String username, String inputText) {
+    StyledDocument doc = mainputTextArea.getStyledDocument();
     username = username.trim() + ": ";
-    inText = inText.trim() + "\n";
+    inputText = inputText.trim() + "\n";
 
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
     StyleConstants.setBold(keyWord, true);
 
     try {
       doc.insertString(doc.getLength(), username, keyWord);
-      doc.insertString(doc.getLength(), inText, null);
+      doc.insertString(doc.getLength(), inputText, null);
     } catch (Exception e) {
       System.out.println(e);
     }
   }
 
-  public void appendThisUserMsg(String inText) {
-    StyledDocument doc = mainTextArea.getStyledDocument();
+  public void appendThisUserMsg(String inputText) {
+    StyledDocument doc = mainputTextArea.getStyledDocument();
     String username = _username.trim() + ": ";
-    inText = inText.trim() + "\n";
+    inputText = inputText.trim() + "\n";
 
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
     StyleConstants.setForeground(keyWord, Color.BLUE);
@@ -94,7 +94,7 @@ public class AdamperChat extends javax.swing.JFrame {
 
     try {
       doc.insertString(doc.getLength(), username, keyWord);
-      doc.insertString(doc.getLength(), inText, null);
+      doc.insertString(doc.getLength(), inputText, null);
     } catch (Exception e) {
       System.out.println(e);
     }
@@ -154,7 +154,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public void connectIncomingReader(String username) {
-    mainTextArea.removeAll();
+    mainputTextArea.removeAll();
     addUserIncomingReader(username);
   }
 
@@ -199,7 +199,7 @@ public class AdamperChat extends javax.swing.JFrame {
     sendBtn = new javax.swing.JButton();
     connectBtn = new javax.swing.JButton();
     jScrollPane2 = new javax.swing.JScrollPane();
-    mainTextArea = new javax.swing.JTextPane();
+    mainputTextArea = new javax.swing.JTextPane();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Chat - Adamper");
@@ -229,7 +229,7 @@ public class AdamperChat extends javax.swing.JFrame {
       }
     });
 
-    jScrollPane2.setViewportView(mainTextArea);
+    jScrollPane2.setViewportView(mainputTextArea);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -331,7 +331,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private javax.swing.JButton connectBtn;
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JButton logoutBtn;
-  private javax.swing.JTextPane mainTextArea;
+  private javax.swing.JTextPane mainputTextArea;
   private javax.swing.JLabel messageFieldLabel;
   private javax.swing.JTextField messageTextField;
   private javax.swing.JButton sendBtn;
