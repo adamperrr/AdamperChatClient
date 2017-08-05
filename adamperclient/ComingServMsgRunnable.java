@@ -31,10 +31,12 @@ public class ComingServMsgRunnable implements Runnable {
             break;
         }
       }
+    } catch (java.lang.NullPointerException e) {
+      // This exception is thrown after every connect attempt when server is off.
     } catch (java.net.SocketException e) {
       // This exception is thrown after every disconnect of client.
     } catch (Exception e) {
-      _mainFrame.appendError(e.toString());
+      _mainFrame.appendError("run: " + e.toString());
     }
   }
 

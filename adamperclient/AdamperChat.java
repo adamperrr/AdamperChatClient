@@ -53,32 +53,40 @@ public class AdamperChat extends javax.swing.JFrame {
   public AdamperChat() {
     initComponents();
     this.getRootPane().setDefaultButton(sendBtn); // Send as a main button
+    logoutBtn.setEnabled(false);
+    displayOnlineUsersBtn.setEnabled(false);
+    sendBtn.setEnabled(false);
+    messageTextField.setEnabled(false);
+
+    connectBtn.setEnabled(true);
   }
-  
+
   public void appendError(String inputText) {
     StyledDocument doc = mainTextArea.getStyledDocument();
     inputText = inputText.trim() + "\n";
-    
+
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
     StyleConstants.setForeground(keyWord, Color.RED);
     StyleConstants.setBold(keyWord, true);
-    
+
     try {
       doc.insertString(doc.getLength(), inputText, keyWord);
       scroolDown();
-    } catch (Exception e) { }
-  }  
-  
+    } catch (Exception e) {
+      appendMsg("appendError: " + e.toString());
+    }
+  }
+
   public void appendMsg(String inputText) {
     StyledDocument doc = mainTextArea.getStyledDocument();
     inputText = inputText.trim() + "\n";
-        
+
     try {
       doc.insertString(doc.getLength(), inputText, null);
       scroolDown();
       playMsgSound();
     } catch (Exception e) {
-      appendError(e.toString());
+      appendError("appendMsg: " + e.toString());
     }
   }
 
@@ -89,19 +97,19 @@ public class AdamperChat extends javax.swing.JFrame {
 
     SimpleAttributeSet timeStyle = new SimpleAttributeSet();
     StyleConstants.setForeground(timeStyle, Color.GRAY);
-    StyleConstants.setItalic(timeStyle, true);     
-    
+    StyleConstants.setItalic(timeStyle, true);
+
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
     StyleConstants.setBold(keyWord, true);
 
     try {
-      doc.insertString(doc.getLength(), time + " ", timeStyle);      
+      doc.insertString(doc.getLength(), time + " ", timeStyle);
       doc.insertString(doc.getLength(), username, keyWord);
       doc.insertString(doc.getLength(), inputText, null);
       scroolDown();
       playMsgSound();
     } catch (Exception e) {
-      appendError(e.toString());
+      appendError("appendUserMsg: " + e.toString());
     }
   }
 
@@ -113,18 +121,18 @@ public class AdamperChat extends javax.swing.JFrame {
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
     StyleConstants.setForeground(keyWord, Color.BLUE);
     StyleConstants.setBold(keyWord, true);
-    
+
     SimpleAttributeSet timeStyle = new SimpleAttributeSet();
     StyleConstants.setForeground(timeStyle, Color.GRAY);
-    StyleConstants.setItalic(timeStyle, true);         
+    StyleConstants.setItalic(timeStyle, true);
 
     try {
-      doc.insertString(doc.getLength(), time + " ", timeStyle);       
+      doc.insertString(doc.getLength(), time + " ", timeStyle);
       doc.insertString(doc.getLength(), username, keyWord);
       doc.insertString(doc.getLength(), inputText, null);
       scroolDown();
     } catch (Exception e) {
-      appendError(e.toString());
+      appendError("appendThisUserMsg: " + e.toString());
     }
   }
 
@@ -162,7 +170,7 @@ public class AdamperChat extends javax.swing.JFrame {
     String username = msg.getUsername();
     String time = msg.getTime();
     String message = msg.getContent();
-    
+
     if (username.equals(_username)) {
       appendThisUserMsg(message, time);
     } else {
@@ -184,35 +192,35 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public void addUserIncomingReader(String username) {
     boolean duplicate = false;
-    for(String temp : _usersList) {
-      if(temp.equals(username.trim())){
+    for (String temp : _usersList) {
+      if (temp.equals(username.trim())) {
         duplicate = true;
         break;
-      }  
+      }
     }
-    
-    if(!duplicate) {
+
+    if (!duplicate) {
       _usersList.add(username.trim());
     }
   }
 
   public void removeUserIncomingReader(String username) {
     _usersList.remove(username);
-    
+
     appendMsg(username + " jest teraz offline.");
-  }  
-  
+  }
+
   private void scroolDown() {
     mainTextArea.setCaretPosition(mainTextArea.getDocument().getLength());
   }
-  
+
   private void playMsgSound() {
     AudioInputStream stream;
     try {
       stream = AudioSystem.getAudioInputStream(getClass().getResource("/glassy-soft-knock.wav"));
       Clip clip = AudioSystem.getClip();
       clip.open(stream);
-      clip.start();    
+      clip.start();
     } catch (UnsupportedAudioFileException e) {
       Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
     } catch (IOException e) {
@@ -221,7 +229,7 @@ public class AdamperChat extends javax.swing.JFrame {
       Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
     }
   }
-  
+
   @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
@@ -396,20 +404,20 @@ public class AdamperChat extends javax.swing.JFrame {
       appendMsg("\t" + currentUser);
     }
   }//GEN-LAST:event_displayOnlineUsersBtnActionPerformed
-  
-  private String _address = "localhost";  
+
+  private String _address = "localhost";
   private int _port = 1995;
-  
+
   Random _randGen = new Random();
   private String _username = "NazwaUsera" + _randGen.nextInt(9999999);
-  
+
   private ArrayList<String> _usersList = new ArrayList();
-  
+
   private boolean _isConnected = false;
   private Socket _socket;
   private BufferedReader _reader;
   private PrintWriter _writer;
-  
+
   private Action accept = new AbstractAction("Accept") { // Afrer clicking enter action
     @Override
     public void actionPerformed(ActionEvent e) {
