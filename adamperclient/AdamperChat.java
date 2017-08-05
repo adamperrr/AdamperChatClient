@@ -53,12 +53,13 @@ public class AdamperChat extends javax.swing.JFrame {
   public AdamperChat() {
     initComponents();
     this.getRootPane().setDefaultButton(sendBtn); // Send as a main button
-    logoutBtn.setEnabled(false);
-    displayOnlineUsersBtn.setEnabled(false);
-    sendBtn.setEnabled(false);
-    messageTextField.setEnabled(false);
-
-    connectBtn.setEnabled(true);
+    
+    _isConnected = false;
+    logoutBtn.setEnabled(_isConnected);
+    displayOnlineUsersBtn.setEnabled(_isConnected);
+    sendBtn.setEnabled(_isConnected);
+    messageTextField.setEnabled(_isConnected);
+    connectBtn.setEnabled(!_isConnected);
   }
 
   public void appendError(String inputText) {
@@ -144,6 +145,12 @@ public class AdamperChat extends javax.swing.JFrame {
       appendError("Rozłączenie nie powiodło się...");
     }
     _isConnected = false;
+    
+    logoutBtn.setEnabled(_isConnected);
+    displayOnlineUsersBtn.setEnabled(_isConnected);
+    sendBtn.setEnabled(_isConnected);
+    messageTextField.setEnabled(_isConnected);
+    connectBtn.setEnabled(!_isConnected);
   }
 
   public void sendDisconnect() {
@@ -378,11 +385,17 @@ public class AdamperChat extends javax.swing.JFrame {
         _reader = new BufferedReader(streamreader);
         _writer = new PrintWriter(_socket.getOutputStream());
 
-        Message tempMsg = new Message(MsgType.Connect, _username, "ConnectMsg");
+        Message tempMsg = new Message(MsgType.Connect, _username, "połączył się.");
         _writer.println(tempMsg.getMessage());
 
         _writer.flush();
+        
         _isConnected = true;
+        logoutBtn.setEnabled(_isConnected);
+        displayOnlineUsersBtn.setEnabled(_isConnected);
+        sendBtn.setEnabled(_isConnected);
+        messageTextField.setEnabled(_isConnected);
+        connectBtn.setEnabled(!_isConnected);
       } catch (Exception e) {
         appendError("Błąd połączenia. Spróbuj ponownie...");
       }
