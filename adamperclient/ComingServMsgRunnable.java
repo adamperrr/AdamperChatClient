@@ -31,8 +31,8 @@ public class ComingServMsgRunnable implements Runnable {
             break;
         }
       }
-    } catch (Exception ex) {
-
+    } catch (Exception e) {
+      _mainFrame.appendError(e.toString());
     }
   }
 

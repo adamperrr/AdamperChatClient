@@ -9,7 +9,7 @@ public class Message {
   public Message(String message) throws Exception {
     String[] msgParts = message.trim().split(_separator);
 
-    if (msgParts.length >= 5) {// There must be at least five parts (last one may be split unnecessarily)
+    if (msgParts.length >= 4) {// There must be at least four parts (last one may be split unnecessarily)
       _message = message.trim();
 
       setUsername(msgParts[1]);
@@ -17,15 +17,17 @@ public class Message {
       setTime(msgParts[3]);
 
       // Setting content - to avoid spliting content by separator
-      int start = 4;
-      String tempContent = "";
-      for (int i = start; i < msgParts.length; i++) {
-        if (i != start) {
-          tempContent += _separator;
+      if(msgParts.length >= 5){
+        int start = 4;
+        String tempContent = "";
+        for (int i = start; i < msgParts.length; i++) {
+          if (i != start) {
+            tempContent += _separator;
+          }
+          tempContent += msgParts[i];
         }
-        tempContent += msgParts[i];
+        setContent(tempContent);
       }
-      setContent(tempContent);
       
       setType(msgParts[0]); // Setting type - must be last because may set everything as error
     } else {

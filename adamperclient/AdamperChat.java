@@ -29,14 +29,14 @@ public class AdamperChat extends javax.swing.JFrame {
           break;
         }
       }
-    } catch (ClassNotFoundException ex) {
-      java.util.logging.Logger.getLogger(AdamperChat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-      java.util.logging.Logger.getLogger(AdamperChat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-      java.util.logging.Logger.getLogger(AdamperChat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-      java.util.logging.Logger.getLogger(AdamperChat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (ClassNotFoundException e) {
+      java.util.logging.Logger.getLogger(AdamperChat.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
+    } catch (InstantiationException e) {
+      java.util.logging.Logger.getLogger(AdamperChat.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
+    } catch (IllegalAccessException e) {
+      java.util.logging.Logger.getLogger(AdamperChat.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
+    } catch (javax.swing.UnsupportedLookAndFeelException e) {
+      java.util.logging.Logger.getLogger(AdamperChat.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
     }
     //</editor-fold>
     //</editor-fold>
@@ -54,7 +54,23 @@ public class AdamperChat extends javax.swing.JFrame {
     initComponents();
     this.getRootPane().setDefaultButton(sendBtn); // Send as a main button
   }
-
+  
+  public void appendError(String inputText) {
+    StyledDocument doc = mainTextArea.getStyledDocument();
+    inputText = inputText.trim() + "\n";
+    
+    SimpleAttributeSet keyWord = new SimpleAttributeSet();
+    StyleConstants.setForeground(keyWord, Color.RED);
+    StyleConstants.setBold(keyWord, true);
+    
+    try {
+      doc.insertString(doc.getLength(), inputText, null);
+      scroolDown();
+    } catch (Exception e) {
+      appendError(e.toString());
+    }
+  }  
+  
   public void appendMsg(String inputText) {
     StyledDocument doc = mainTextArea.getStyledDocument();
     inputText = inputText.trim() + "\n";
@@ -64,7 +80,7 @@ public class AdamperChat extends javax.swing.JFrame {
       scroolDown();
       playMsgSound();
     } catch (Exception e) {
-      System.out.println(e);
+      appendError(e.toString());
     }
   }
 
@@ -87,7 +103,7 @@ public class AdamperChat extends javax.swing.JFrame {
       scroolDown();
       playMsgSound();
     } catch (Exception e) {
-      System.out.println(e);
+      appendError(e.toString());
     }
   }
 
@@ -110,7 +126,7 @@ public class AdamperChat extends javax.swing.JFrame {
       doc.insertString(doc.getLength(), inputText, null);
       scroolDown();
     } catch (Exception e) {
-      System.out.println(e);
+      appendError(e.toString());
     }
   }
 
@@ -118,8 +134,8 @@ public class AdamperChat extends javax.swing.JFrame {
     try {
       appendMsg("Rozłączono\n");
       _socket.close();
-    } catch (Exception ex) {
-      appendMsg("Rozłączenie nie powiodło się... \n");
+    } catch (Exception e) {
+      appendError("Rozłączenie nie powiodło się... \n");
     }
     _isConnected = false;
   }
@@ -130,7 +146,7 @@ public class AdamperChat extends javax.swing.JFrame {
       _writer.println(tempMsg.getMessage());
       _writer.flush();
     } catch (Exception e) {
-      appendMsg("Błąd wysyłania wiadomości o rozłączeniu... \n");
+      appendError("Błąd wysyłania wiadomości o rozłączeniu... \n");
     }
   }
 
@@ -199,12 +215,12 @@ public class AdamperChat extends javax.swing.JFrame {
       Clip clip = AudioSystem.getClip();
       clip.open(stream);
       clip.start();    
-    } catch (UnsupportedAudioFileException ex) {
-      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
-      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (LineUnavailableException ex) {
-      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (UnsupportedAudioFileException e) {
+      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
+    } catch (IOException e) {
+      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
+    } catch (LineUnavailableException e) {
+      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
     }
   }
   
@@ -333,8 +349,8 @@ public class AdamperChat extends javax.swing.JFrame {
         Message tempMsg = new Message(MsgType.Chat, _username, messageTextField.getText());
         _writer.println(tempMsg.getMessage());
         _writer.flush(); // flushes the buffer
-      } catch (Exception ex) {
-        appendMsg("Wiadomość nie została wysłana... \n");
+      } catch (Exception e) {
+        appendError("Wiadomość nie została wysłana...");
       }
       messageTextField.setText("");
       messageTextField.requestFocus();
@@ -356,13 +372,13 @@ public class AdamperChat extends javax.swing.JFrame {
         _reader = new BufferedReader(streamreader);
         _writer = new PrintWriter(_socket.getOutputStream());
 
-        Message tempMsg = new Message(MsgType.Connect, _username, "połączył się.");
+        Message tempMsg = new Message(MsgType.Connect, _username, "ConnectMsg");
         _writer.println(tempMsg.getMessage());
 
         _writer.flush();
         _isConnected = true;
-      } catch (Exception ex) {
-        appendMsg("Błąd połączenia. Spróbuj ponownie... \n");
+      } catch (Exception e) {
+        appendError("Błąd połączenia. Spróbuj ponownie...");
       }
 
       ListenThread();
