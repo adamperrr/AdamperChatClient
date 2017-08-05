@@ -18,7 +18,7 @@ public class IncomingReader implements Runnable {
 
         switch (tempMsg.getType()) {
           case Chat:
-            _mainFrame.chatMsgIncomingReader(tempMsg.getUsername(), tempMsg.getContent());
+            _mainFrame.chatMsgIncomingReader(tempMsg);
             break;
           case Connect:
             _mainFrame.connectIncomingReader(tempMsg.getUsername());

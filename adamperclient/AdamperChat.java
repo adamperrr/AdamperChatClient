@@ -5,6 +5,7 @@ import java.io.*;
 import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -57,6 +58,7 @@ public class AdamperChat extends javax.swing.JFrame {
   public void appendMsg(String inputText) {
     StyledDocument doc = mainTextArea.getStyledDocument();
     inputText = inputText.trim() + "\n";
+        
     try {
       doc.insertString(doc.getLength(), inputText, null);
       scroolDown();
@@ -66,15 +68,20 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public void appendUserMsg(String username, String inputText) {
+  public void appendUserMsg(String username, String inputText, String time) {
     StyledDocument doc = mainTextArea.getStyledDocument();
     username = username.trim() + ": ";
     inputText = inputText.trim() + "\n";
 
+    SimpleAttributeSet timeStyle = new SimpleAttributeSet();
+    StyleConstants.setForeground(timeStyle, Color.GRAY);
+    StyleConstants.setItalic(timeStyle, true);     
+    
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
     StyleConstants.setBold(keyWord, true);
 
     try {
+      doc.insertString(doc.getLength(), time + " ", timeStyle);      
       doc.insertString(doc.getLength(), username, keyWord);
       doc.insertString(doc.getLength(), inputText, null);
       scroolDown();
@@ -84,7 +91,7 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public void appendThisUserMsg(String inputText) {
+  public void appendThisUserMsg(String inputText, String time) {
     StyledDocument doc = mainTextArea.getStyledDocument();
     String username = _username.trim() + ": ";
     inputText = inputText.trim() + "\n";
@@ -92,8 +99,13 @@ public class AdamperChat extends javax.swing.JFrame {
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
     StyleConstants.setForeground(keyWord, Color.BLUE);
     StyleConstants.setBold(keyWord, true);
+    
+    SimpleAttributeSet timeStyle = new SimpleAttributeSet();
+    StyleConstants.setForeground(timeStyle, Color.GRAY);
+    StyleConstants.setItalic(timeStyle, true);         
 
     try {
+      doc.insertString(doc.getLength(), time + " ", timeStyle);       
       doc.insertString(doc.getLength(), username, keyWord);
       doc.insertString(doc.getLength(), inputText, null);
       scroolDown();
@@ -113,8 +125,8 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public void sendDisconnect() {
-    Message tempMsg = new Message(MsgType.Disconnect, _username, "");
     try {
+      Message tempMsg = new Message(MsgType.Disconnect, _username, "");
       _writer.println(tempMsg.getMessage());
       _writer.flush();
     } catch (Exception e) {
@@ -132,11 +144,15 @@ public class AdamperChat extends javax.swing.JFrame {
     IncomingReader.start();
   }
 
-  public void chatMsgIncomingReader(String username, String message) {
+  public void chatMsgIncomingReader(Message msg) {
+    String username = msg.getUsername();
+    String time = msg.getTime();
+    String message = msg.getContent();
+    
     if (username.equals(_username)) {
-      appendThisUserMsg(message);
+      appendThisUserMsg(message, time);
     } else {
-      appendUserMsg(username, message);
+      appendUserMsg(username, message, time);
     }
   }
 
@@ -366,16 +382,16 @@ public class AdamperChat extends javax.swing.JFrame {
       appendMsg("\t" + currentUser);
     }
   }//GEN-LAST:event_displayOnlineUsersBtnActionPerformed
-
+  
   private String _address = "localhost";  
   private int _port = 2222;
   
   Random _randGen = new Random();
   private String _username = "NazwaUsera" + _randGen.nextInt(9999999);
-  private boolean _isConnected = false;
   
   private ArrayList<String> _usersList = new ArrayList();
-
+  
+  private boolean _isConnected = false;
   private Socket _socket;
   private BufferedReader _reader;
   private PrintWriter _writer;

@@ -5,6 +5,5 @@ public enum MsgType {
   Chat,
   Connect,
   Disconnect,
-  Done,
-  Error
+  Done
 }
