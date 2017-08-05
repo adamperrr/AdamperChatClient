@@ -2,9 +2,9 @@ package adamperclient;
 
 import msg.*;
 
-public class IncomingReader implements Runnable {
+public class ComingServMsgRunnable implements Runnable {
 
-  public IncomingReader(javax.swing.JFrame form) {
+  public ComingServMsgRunnable(javax.swing.JFrame form) {
     _mainFrame = (AdamperChat) form;
   }
 

@@ -139,7 +139,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public void ListenThread() {
-    IncomingReader tempIR = new IncomingReader(this);
+    ComingServMsgRunnable tempIR = new ComingServMsgRunnable(this);
     Thread IncomingReader = new Thread(tempIR);
     IncomingReader.start();
   }
@@ -384,7 +384,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }//GEN-LAST:event_displayOnlineUsersBtnActionPerformed
   
   private String _address = "localhost";  
-  private int _port = 2222;
+  private int _port = 1995;
   
   Random _randGen = new Random();
   private String _username = "NazwaUsera" + _randGen.nextInt(9999999);
