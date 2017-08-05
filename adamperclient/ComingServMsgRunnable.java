@@ -31,6 +31,8 @@ public class ComingServMsgRunnable implements Runnable {
             break;
         }
       }
+    } catch (java.net.SocketException e) {
+      // This exception is thrown after every disconnect of client.
     } catch (Exception e) {
       _mainFrame.appendError(e.toString());
     }

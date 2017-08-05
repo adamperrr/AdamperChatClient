@@ -64,11 +64,9 @@ public class AdamperChat extends javax.swing.JFrame {
     StyleConstants.setBold(keyWord, true);
     
     try {
-      doc.insertString(doc.getLength(), inputText, null);
+      doc.insertString(doc.getLength(), inputText, keyWord);
       scroolDown();
-    } catch (Exception e) {
-      appendError(e.toString());
-    }
+    } catch (Exception e) { }
   }  
   
   public void appendMsg(String inputText) {
@@ -142,7 +140,7 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public void sendDisconnect() {
     try {
-      Message tempMsg = new Message(MsgType.Disconnect, _username, "");
+      Message tempMsg = new Message(MsgType.Disconnect, _username, "DisconnectMsg");
       _writer.println(tempMsg.getMessage());
       _writer.flush();
     } catch (Exception e) {
