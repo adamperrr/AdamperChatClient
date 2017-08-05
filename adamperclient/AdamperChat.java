@@ -130,10 +130,10 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public void disconnect() {
     try {
-      appendMsg("Rozłączono\n");
+      appendMsg("Rozłączono");
       _socket.close();
     } catch (Exception e) {
-      appendError("Rozłączenie nie powiodło się... \n");
+      appendError("Rozłączenie nie powiodło się...");
     }
     _isConnected = false;
   }
@@ -144,7 +144,7 @@ public class AdamperChat extends javax.swing.JFrame {
       _writer.println(tempMsg.getMessage());
       _writer.flush();
     } catch (Exception e) {
-      appendError("Błąd wysyłania wiadomości o rozłączeniu... \n");
+      appendError("Błąd wysyłania wiadomości o rozłączeniu...");
     }
   }
 
@@ -199,7 +199,7 @@ public class AdamperChat extends javax.swing.JFrame {
   public void removeUserIncomingReader(String username) {
     _usersList.remove(username);
     
-    appendMsg(username + " jest teraz offline.\n");
+    appendMsg(username + " jest teraz offline.");
   }  
   
   private void scroolDown() {
@@ -382,7 +382,7 @@ public class AdamperChat extends javax.swing.JFrame {
       ListenThread();
 
     } else if (_isConnected) {
-      appendMsg("Jesteś już połączony... \n");
+      appendMsg("Jesteś już połączony...");
     }
   }//GEN-LAST:event_connectBtnActionPerformed
 

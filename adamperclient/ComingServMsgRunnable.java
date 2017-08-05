@@ -4,8 +4,8 @@ import msg.*;
 
 public class ComingServMsgRunnable implements Runnable {
 
-  public ComingServMsgRunnable(javax.swing.JFrame form) {
-    _mainFrame = (AdamperChat) form;
+  public ComingServMsgRunnable(AdamperChat form) {
+    _mainFrame = form;
   }
 
   @Override
