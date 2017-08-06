@@ -173,7 +173,7 @@ public class AdamperChat extends javax.swing.JFrame {
     IncomingReader.start();
   }
 
-  public void chatMsgIncomingReader(Message msg) {
+  public void chat_ComingServMsg(Message msg) {
     String username = msg.getUsername();
     String time = msg.getTime();
     String message = msg.getContent();
@@ -185,19 +185,19 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public void connectIncomingReader(String username) {
-    addUserIncomingReader(username);
+  public void connect_ComingServMsg(String username) {
+    addUser_ComingServMsg(username);
   }
 
-  public void disconnectIncomingReader(String username) {
-    removeUserIncomingReader(username);
+  public void disconnect_ComingServMsg(String username) {
+    removeUser_ComingServMsg(username);
   }
 
-  public void doneIncomingReader(String username) {
+  public void done_ComingServMsg(String username) {
     ; // Server operation just ended
   }
 
-  public void addUserIncomingReader(String username) {
+  public void addUser_ComingServMsg(String username) {
     boolean duplicate = false;
     for (String temp : _usersList) {
       if (temp.equals(username.trim())) {
@@ -211,7 +211,7 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public void removeUserIncomingReader(String username) {
+  public void removeUser_ComingServMsg(String username) {
     _usersList.remove(username);
 
     appendMsg(username + " jest teraz offline.");
