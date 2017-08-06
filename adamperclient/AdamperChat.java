@@ -155,7 +155,7 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public void sendDisconnect() {
     try {
-      Message tempMsg = new Message(MsgType.Disconnect, _username, "DisconnectMsg");
+      Message tempMsg = new Message(MsgType.Disconnect, _username, "DisconnectMsgFromUser");
       _writer.println(tempMsg.getMessage());
       _writer.flush();
     } catch (Exception e) {
@@ -173,7 +173,7 @@ public class AdamperChat extends javax.swing.JFrame {
     IncomingReader.start();
   }
 
-  public void chat_ComingServMsg(Message msg) {
+  public synchronized void chat_ComingServMsg(Message msg) {
     String username = msg.getUsername();
     String time = msg.getTime();
     String message = msg.getContent();
@@ -185,36 +185,37 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public void connect_ComingServMsg(String username) {
+  public synchronized void connect_ComingServMsg(String username) {
+    // Connect message informs which users are now online and update local users list
+    startUsersUpdate(); 
     addUser_ComingServMsg(username);
   }
 
-  public void disconnect_ComingServMsg(String username) {
-    removeUser_ComingServMsg(username);
-  }
-
-  public void done_ComingServMsg(String username) {
-    ; // Server operation just ended
-  }
-
-  public void addUser_ComingServMsg(String username) {
-    boolean duplicate = false;
-    for (String temp : _usersList) {
-      if (temp.equals(username.trim())) {
-        duplicate = true;
-        break;
-      }
-    }
-
-    if (!duplicate) {
-      _usersList.add(username.trim());
+  public synchronized void startUsersUpdate() {
+    if(!updatingUsersList) {
+      _usersList = new ArrayList();
+      updatingUsersList = true;
     }
   }
-
-  public void removeUser_ComingServMsg(String username) {
-    _usersList.remove(username);
-
+  
+  public synchronized void stopUsersUpdate() {
+    if(updatingUsersList) {
+      updatingUsersList = false;
+    }
+  }  
+  
+  public synchronized void disconnect_ComingServMsg(String username) {
     appendMsg(username + " jest teraz offline.");
+    // This method doesn't remove user because after removing user 
+    // server sends Connect messages informing which users are online
+  }
+
+  public synchronized void done_ComingServMsg(String username) {
+    stopUsersUpdate();
+  }
+
+  public synchronized void addUser_ComingServMsg(String username) {
+    _usersList.add(username.trim());
   }
 
   private void scroolDown() {
@@ -418,15 +419,15 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_displayOnlineUsersBtnActionPerformed
 
+  private ArrayList<String> _usersList = new ArrayList();
+  private boolean updatingUsersList = false;
+  
+  private String _username = "NazwaUsera" + (new Random()).nextInt(9999999);
+  private boolean _isConnected = false;
+  
   private String _address = "localhost";
   private int _port = 1995;
 
-  Random _randGen = new Random();
-  private String _username = "NazwaUsera" + _randGen.nextInt(9999999);
-
-  private ArrayList<String> _usersList = new ArrayList();
-
-  private boolean _isConnected = false;
   private Socket _socket;
   private BufferedReader _reader;
   private PrintWriter _writer;
