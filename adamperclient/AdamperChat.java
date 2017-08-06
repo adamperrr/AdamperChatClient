@@ -203,12 +203,6 @@ public class AdamperChat extends javax.swing.JFrame {
       updatingUsersList = false;
     }
   }  
-  
-  public synchronized void disconnect_ComingServMsg(String username) {
-    appendMsg(username + " jest teraz offline.");
-    // This method doesn't remove user because after removing user 
-    // server sends Connect messages informing which users are online
-  }
 
   public synchronized void done_ComingServMsg(String username) {
     stopUsersUpdate();

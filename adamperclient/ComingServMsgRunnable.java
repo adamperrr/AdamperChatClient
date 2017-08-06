@@ -23,9 +23,6 @@ public class ComingServMsgRunnable implements Runnable {
           case Connect:
             _mainFrame.connect_ComingServMsg(tempMsg.getUsername());
             break;
-          case Disconnect:
-            _mainFrame.disconnect_ComingServMsg(tempMsg.getUsername());
-            break;
           case Done:
             _mainFrame.done_ComingServMsg(tempMsg.getUsername());
             break;
