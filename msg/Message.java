@@ -20,50 +20,28 @@ public class Message {
       setUsername(msgParts[1]);
       setDate(msgParts[2]);
       setTime(msgParts[3]);
-
-      // Setting content - to avoid spliting content by separator
-      int start = 4;
-      String first3letters = "";
-      String possibleUsername = "";
-
-      if (msgParts[4].length() > 3) {
-
-        first3letters = msgParts[4].substring(0, 3).trim();
-        possibleUsername = msgParts[4].substring(3).trim();
-      }
-
-      if (first3letters.equals("to:") && !isBlank(possibleUsername)
-              && msgParts.length > 5 && !isBlank(msgParts[5])) {
-
-        setTo(possibleUsername);
-        start = 5;
-      } else {
-
-        setTo("all");
-        start = 4;
-      }
-
-      String tempContent = "";
-      for (int i = start; i < msgParts.length; i++) {
-        if (i != start) {
-          tempContent += _separator;
-        }
-        tempContent += msgParts[i];
-      }
-
-      setContent(tempContent);
-
+	  
+      String[] arrCopy = new String[msgParts.length - 4];
+      System.arraycopy(msgParts, 4, arrCopy, 0, msgParts.length - 4);
+      String[] parsedContent = parseContent(arrCopy);
+      
+      setTo(parsedContent[0]);
+      setContent(parsedContent[1]);
     } else {
       throw new Exception("Wrong message format");
     }
   }
-
+  
   public Message(MsgType type, String username, String content) throws Exception {
     setType(type);
     setUsername(username);
     setCurrentDateNTime();
-    setTo("all");
-    setContent(content);
+    
+    String[] arrCopy = content.split("/");
+    String[] parsedContent = parseContent(arrCopy);
+    setTo(parsedContent[0]);
+    setContent(parsedContent[1]);    
+    
     buildMessage();
   }
 
@@ -91,6 +69,47 @@ public class Message {
     buildMessage();
   }
 
+  public String[] parseContent(String[] contParts) {
+    /*
+      This function takes array of content for example: ["to:Adam", "content separatet", "by slash"]
+      or ["content separatet", "by slash"].
+      It must determine whether or not the table contains the addressee
+      and return the relevant data.
+    */
+    
+    String contentFirst3letters = "";
+    String possibleUsername = "";
+    if (contParts[0].length() > 3) { // if there is "to:" statement
+      contentFirst3letters = contParts[0].substring(0, 3).trim();
+      possibleUsername = contParts[0].substring(3).trim();
+    }
+
+    String to = "";
+    int start = 1;
+    if (contentFirst3letters.equals("to:") // Does content start with "to:"
+            && !isBlank(possibleUsername) // Is word after "to:" not blank
+            && contParts.length >= 2 // Is there content after "to:" and username
+            && !isBlank(contParts[1])) { // Is there content after "to:" and username
+
+      to = possibleUsername;
+      start = 1;
+    } else {
+      to = "all";
+      start = 0;
+    }
+
+    String tempContent = ""; // Content may contain slashes which may cause making it divided.
+    for (int i = start; i < contParts.length; i++) {
+      if (i != start) {
+        tempContent += _separator;
+      }
+      tempContent += contParts[i];
+    }
+
+    String[] Result = {to, tempContent};
+    return Result;
+  }  
+  
   public String getMessage() {
     return _message;
   }
@@ -137,7 +156,7 @@ public class Message {
 
     return result;
   }
-
+  
   private void setType(String type) throws Exception {
     if (type.equals("Chat")) {
       setChatType();
@@ -209,10 +228,12 @@ public class Message {
   }
 
   private void setTo(String to) {
-    Pattern pattern = Pattern.compile("^([0-1][0-9]|2[0-4])(:([0-5][0-9])){2}$");
-    Matcher matcher = pattern.matcher(to);
-    boolean check = matcher.matches();
-    _to = to.trim();
+    if(to == null || to.equals(""))
+    {
+      _to = "all";
+    } else {
+      _to = to.trim();
+    }
   }
 
   private void setContent(String content) {
@@ -229,12 +250,13 @@ public class Message {
   }
 
   private void buildMessage() {
-    String[] tempMessage = new String[5];
+    String[] tempMessage = new String[6];
     tempMessage[0] = _type.toString();
     tempMessage[1] = _username;
     tempMessage[2] = _date;
     tempMessage[3] = _time;
-    tempMessage[4] = _content;
+    tempMessage[4] = "to:" + _to;    
+    tempMessage[5] = _content;
 
     _message = String.join(_separator, tempMessage);
   }

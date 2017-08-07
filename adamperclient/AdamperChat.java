@@ -137,6 +137,31 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
+  public void appendPrivMsg(String inputText, String time, String to) {
+    StyledDocument doc = mainTextArea.getStyledDocument();
+    String username = _username.trim() + ": ";
+    inputText = inputText.trim() + "\n";
+
+    SimpleAttributeSet keyWord = new SimpleAttributeSet();
+    StyleConstants.setForeground(keyWord, new Color(147, 35, 114));
+    if(to.equals(_username)) {
+      StyleConstants.setBold(keyWord, true);
+    }
+
+    SimpleAttributeSet timeStyle = new SimpleAttributeSet();
+    StyleConstants.setForeground(timeStyle, Color.GRAY);
+    StyleConstants.setItalic(timeStyle, true);
+
+    try {
+      doc.insertString(doc.getLength(), time + " ", timeStyle);
+      doc.insertString(doc.getLength(), username, keyWord);
+      doc.insertString(doc.getLength(), inputText, keyWord);
+      scroolDown();
+    } catch (Exception e) {
+      appendError("appendThisUserMsg: " + e.toString());
+    }
+  }  
+  
   public void disconnect() {
     try {
       appendMsg("Rozłączono");
@@ -177,8 +202,11 @@ public class AdamperChat extends javax.swing.JFrame {
     String username = msg.getUsername();
     String time = msg.getTime();
     String message = msg.getContent();
+    String to = msg.getTo();
 
-    if (username.equals(_username)) {
+    if (!(to.equals("all"))) {
+      appendPrivMsg(message, time, to);
+    } else if (username.equals(_username)) {
       appendThisUserMsg(message, time);
     } else {
       appendUserMsg(username, message, time);
