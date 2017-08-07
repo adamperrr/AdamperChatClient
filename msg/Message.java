@@ -9,27 +9,50 @@ public class Message {
   public Message(String message) throws Exception {
     String[] msgParts = message.trim().split(_separator);
 
-    if (msgParts.length >= 4) {// There must be at least four parts (last one may be split unnecessarily)
+    if (msgParts.length >= 4) {
+      // There must be at least 4 parts (content may be split unnecessarily)
+      // The following are required: type, username, date, time
+      // Content in some types is not necesery
+
       _message = message.trim();
 
+      setType(msgParts[0]);
       setUsername(msgParts[1]);
       setDate(msgParts[2]);
       setTime(msgParts[3]);
 
       // Setting content - to avoid spliting content by separator
-      if(msgParts.length >= 5){
-        int start = 4;
-        String tempContent = "";
-        for (int i = start; i < msgParts.length; i++) {
-          if (i != start) {
-            tempContent += _separator;
-          }
-          tempContent += msgParts[i];
-        }
-        setContent(tempContent);
+      int start = 4;
+      String first3letters = "";
+      String possibleUsername = "";
+
+      if (msgParts[4].length() > 3) {
+
+        first3letters = msgParts[4].substring(0, 3).trim();
+        possibleUsername = msgParts[4].substring(3).trim();
       }
-      
-      setType(msgParts[0]); // Setting type - must be last because may set everything as error
+
+      if (first3letters.equals("to:") && !isBlank(possibleUsername)
+              && msgParts.length > 5 && !isBlank(msgParts[5])) {
+
+        setTo(possibleUsername);
+        start = 5;
+      } else {
+
+        setTo("all");
+        start = 4;
+      }
+
+      String tempContent = "";
+      for (int i = start; i < msgParts.length; i++) {
+        if (i != start) {
+          tempContent += _separator;
+        }
+        tempContent += msgParts[i];
+      }
+
+      setContent(tempContent);
+
     } else {
       throw new Exception("Wrong message format");
     }
@@ -39,19 +62,32 @@ public class Message {
     setType(type);
     setUsername(username);
     setCurrentDateNTime();
+    setTo("all");
     setContent(content);
+    buildMessage();
+  }
+
+  public Message(MsgType type, String username, String to, String content) throws Exception {
+    this(type, username, content);
+    setTo(to);
     buildMessage();
   }
 
   public Message(MsgType type, String username, Date dateObj, String content) throws Exception {
     this(type, username, content);
-    
+
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
     String date = dateFormat.format(dateObj);
     String time = timeFormat.format(dateObj);
 
+    buildMessage();
+  }
+
+  public Message(MsgType type, String username, Date dateObj, String to, String content) throws Exception {
+    this(type, username, dateObj, content);
+    setTo(to);
     buildMessage();
   }
 
@@ -75,24 +111,29 @@ public class Message {
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY); // Java doesn't like Poland :(
     Date date = format.parse(_date + " " + _time);
     return date;
-  }  
-  
+  }
+
   public String getDate() {
     return _date;
   }
 
   public String getTime() {
     return _time;
-  }  
-  
+  }
+
+  public String getTo() {
+    return _to;
+  }
+
   public String toString() {
     String result = "_type = " + _type.toString() + "\n"
             + "_username = " + _username + "\n"
-            + "_content = " + _content + "\n"
-            + "_message = " + _message + "\n"
-            + "_separator = " + _separator + "\n"
             + "_time = " + _time + "\n"
-            + "_date = " + _date + "\n";
+            + "_date = " + _date + "\n"
+            + "_to = " + _to + "\n"
+            + "_content = " + _content + "\n\n"
+            + "_message = " + _message + "\n"
+            + "_separator = " + _separator + "\n";
 
     return result;
   }
@@ -110,7 +151,7 @@ public class Message {
       throw new Exception("Wrong type");
     }
   }
-  
+
   private void setType(MsgType type) throws Exception {
     if (type == MsgType.None || type == null) {
       throw new Exception("Wrong type");
@@ -147,26 +188,33 @@ public class Message {
     Pattern pattern = Pattern.compile("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$");
     Matcher matcher = pattern.matcher(date);
     boolean check = matcher.matches();
-    
-    if(check) {
+
+    if (check) {
       _date = date;
     } else {
       throw new Exception("Wrong date format");
     }
   }
-  
+
   private void setTime(String time) throws Exception {
     Pattern pattern = Pattern.compile("^([0-1][0-9]|2[0-4])(:([0-5][0-9])){2}$");
     Matcher matcher = pattern.matcher(time);
     boolean check = matcher.matches();
-    
-    if(check) {
+
+    if (check) {
       _time = time;
     } else {
       throw new Exception("Wrong time format");
     }
   }
-  
+
+  private void setTo(String to) {
+    Pattern pattern = Pattern.compile("^([0-1][0-9]|2[0-4])(:([0-5][0-9])){2}$");
+    Matcher matcher = pattern.matcher(to);
+    boolean check = matcher.matches();
+    _to = to.trim();
+  }
+
   private void setContent(String content) {
     _content = content.trim();
   }
@@ -179,7 +227,7 @@ public class Message {
     _date = dateFormat.format(dateObj);
     _time = timeFormat.format(dateObj);
   }
-  
+
   private void buildMessage() {
     String[] tempMessage = new String[5];
     tempMessage[0] = _type.toString();
@@ -206,9 +254,11 @@ public class Message {
 
   private MsgType _type = MsgType.None;
   private String _username = "";
-  private String _content = "";
-  private String _message = "";
-  private String _time = "";
   private String _date = "";
+  private String _time = "";
+  private String _to = "all";
+  private String _content = "";
+
+  private String _message = "";
   private String _separator = "/";
 }
