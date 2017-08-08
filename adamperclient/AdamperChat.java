@@ -52,7 +52,8 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public AdamperChat() {
     initComponents();
-    this.getRootPane().setDefaultButton(sendBtn); // Send as a main button
+    setTitle(programTitle);
+    getRootPane().setDefaultButton(sendBtn); // Send as a main button
     
     _isConnected = false;
     logoutBtn.setEnabled(_isConnected);
@@ -164,8 +165,9 @@ public class AdamperChat extends javax.swing.JFrame {
   
   public void disconnect() {
     try {
-      appendMsg("Rozłączono");
       _socket.close();
+      appendMsg("Rozłączono");
+      setTitle(programTitle); 
     } catch (Exception e) {
       appendError("Rozłączenie nie powiodło się...");
     }
@@ -275,7 +277,7 @@ public class AdamperChat extends javax.swing.JFrame {
     clearScreenBtn = new javax.swing.JButton();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("Chat - Adamper");
+    setTitle("AdamperChat");
     setMinimumSize(new java.awt.Dimension(410, 340));
     setPreferredSize(new java.awt.Dimension(410, 340));
 
@@ -376,8 +378,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }//GEN-LAST:event_logoutBtnActionPerformed
 
   private void sendBtnActionMethod() {
-    String nothing = "";
-    if ((messageTextField.getText()).equals(nothing)) {
+    if ((messageTextField.getText()).equals("")) {
       messageTextField.setText("");
       messageTextField.requestFocus();
     } else {
@@ -419,6 +420,7 @@ public class AdamperChat extends javax.swing.JFrame {
         sendBtn.setEnabled(_isConnected);
         messageTextField.setEnabled(_isConnected);
         connectBtn.setEnabled(!_isConnected);
+        setTitle(programTitle + ": " + _username);    
       } catch (Exception e) {
         appendError("Błąd połączenia. Spróbuj ponownie...");
       }
@@ -444,7 +446,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private ArrayList<String> _usersList = new ArrayList();
   private boolean updatingUsersList = false;
   
-  private String _username = "NazwaUsera" + (new Random()).nextInt(9999999);
+  private String _username = "user" + (new Random()).nextInt(999);
   private boolean _isConnected = false;
   
   private String _address = "localhost";
@@ -454,6 +456,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private BufferedReader _reader;
   private PrintWriter _writer;
 
+  private String programTitle = "AdamperChat";
   private Action accept = new AbstractAction("Accept") { // Afrer clicking enter action
     @Override
     public void actionPerformed(ActionEvent e) {
