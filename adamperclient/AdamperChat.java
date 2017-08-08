@@ -138,9 +138,9 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public void appendPrivMsg(String inputText, String time, String to) {
+  public void appendPrivMsg(String inputText, String time, String to, String from) {
     StyledDocument doc = mainTextArea.getStyledDocument();
-    String username = _username.trim() + ": ";
+    String tempFrom = from.trim() + ": ";
     inputText = inputText.trim() + "\n";
 
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
@@ -155,7 +155,7 @@ public class AdamperChat extends javax.swing.JFrame {
 
     try {
       doc.insertString(doc.getLength(), time + " ", timeStyle);
-      doc.insertString(doc.getLength(), username, keyWord);
+      doc.insertString(doc.getLength(), tempFrom, keyWord);
       doc.insertString(doc.getLength(), inputText, keyWord);
       scroolDown();
     } catch (Exception e) {
@@ -201,17 +201,17 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public synchronized void chat_ComingServMsg(Message msg) {
-    String username = msg.getUsername();
+    String from = msg.getUsername();
     String time = msg.getTime();
     String message = msg.getContent();
     String to = msg.getTo();
 
     if (!(to.equals("all"))) {
-      appendPrivMsg(message, time, to);
-    } else if (username.equals(_username)) {
+      appendPrivMsg(message, time, to, from);
+    } else if (from.equals(_username)) {
       appendThisUserMsg(message, time);
     } else {
-      appendUserMsg(username, message, time);
+      appendUserMsg(from, message, time);
     }
   }
 
