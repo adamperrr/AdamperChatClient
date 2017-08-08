@@ -247,12 +247,11 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   private void playMsgSound() {
-    AudioInputStream stream;
     try {
-      stream = AudioSystem.getAudioInputStream(getClass().getResource("/glassy-soft-knock.wav"));
-      Clip clip = AudioSystem.getClip();
-      clip.open(stream);
-      clip.start();
+      _audioStream = AudioSystem.getAudioInputStream(AdamperChat.class.getResource("/adamperclient/glassy-soft-knock.wav"));
+      _audioClip = AudioSystem.getClip();
+      _audioClip.open(_audioStream);
+      _audioClip.start();
     } catch (UnsupportedAudioFileException e) {
       Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
     } catch (IOException e) {
@@ -442,20 +441,21 @@ public class AdamperChat extends javax.swing.JFrame {
       appendMsg("\t" + currentUser);
     }
   }//GEN-LAST:event_displayOnlineUsersBtnActionPerformed
-
+  
+  private String _username = "user" + (new Random()).nextInt(999);
   private ArrayList<String> _usersList = new ArrayList();
   private boolean updatingUsersList = false;
   
-  private String _username = "user" + (new Random()).nextInt(999);
   private boolean _isConnected = false;
   
   private String _address = "localhost";
   private int _port = 1995;
-
   private Socket _socket;
   private BufferedReader _reader;
   private PrintWriter _writer;
 
+  AudioInputStream _audioStream;
+  Clip _audioClip;
   private String programTitle = "AdamperChat";
   private Action accept = new AbstractAction("Accept") { // Afrer clicking enter action
     @Override
