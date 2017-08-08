@@ -53,16 +53,15 @@ public class AdamperChat extends javax.swing.JFrame {
     initComponents();
     setTitle(programTitle);
     getRootPane().setDefaultButton(sendBtn); // Send as a main button
+    
+    loadProperties();
 
     _isConnected = false;
     logoutBtn.setEnabled(_isConnected);
     displayOnlineUsersBtn.setEnabled(_isConnected);
     sendBtn.setEnabled(_isConnected);
     messageTextField.setEnabled(_isConnected);
-    connectBtn.setEnabled(!_isConnected);
-
-    loadProperties();    
-    loadSound();
+    connectBtn.setEnabled(!_isConnected);        
   }
 
   public void appendError(String inputText) {
@@ -262,7 +261,8 @@ public class AdamperChat extends javax.swing.JFrame {
       // get the property value and print it out
       _host = prop.getProperty("host");
       _port = Integer.parseInt(prop.getProperty("port"));
-
+      _soundOn = prop.getProperty("sound").equals("on");
+      
     } catch (IOException ex) {
       ex.printStackTrace();
     } finally {
@@ -276,11 +276,16 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
   
-  private void loadSound() {
+  private void playMsgSound() {
+    if(!_soundOn) {
+      return;
+    }
+    
     try {
       _audioStream = AudioSystem.getAudioInputStream(AdamperChat.class.getResource("/adamperclient/glassy-soft-knock.wav"));
       _audioClip = AudioSystem.getClip();
       _audioClip.open(_audioStream);
+      _audioClip.start();
     } catch (LineUnavailableException ex) {
       Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, ex);
     } catch (UnsupportedAudioFileException ex) {
@@ -289,11 +294,7 @@ public class AdamperChat extends javax.swing.JFrame {
       Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
-  
-  private void playMsgSound() {
-    _audioClip.start();
-  }  
-  
+    
   @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
@@ -478,6 +479,7 @@ public class AdamperChat extends javax.swing.JFrame {
   // Loaded properties   
   private String _host = "localhost"; // Default value
   private int _port = 1995; // Default value
+  private boolean _soundOn = false;
     
   private boolean updatingUsersList = false;
   
