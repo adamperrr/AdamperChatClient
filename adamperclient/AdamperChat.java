@@ -47,20 +47,22 @@ public class AdamperChat extends javax.swing.JFrame {
         new AdamperChat().setVisible(true);
       }
     });
-
   }
 
   public AdamperChat() {
     initComponents();
     setTitle(programTitle);
     getRootPane().setDefaultButton(sendBtn); // Send as a main button
-    
+
     _isConnected = false;
     logoutBtn.setEnabled(_isConnected);
     displayOnlineUsersBtn.setEnabled(_isConnected);
     sendBtn.setEnabled(_isConnected);
     messageTextField.setEnabled(_isConnected);
     connectBtn.setEnabled(!_isConnected);
+
+    loadProperties();    
+    loadSound();
   }
 
   public void appendError(String inputText) {
@@ -145,8 +147,9 @@ public class AdamperChat extends javax.swing.JFrame {
 
     SimpleAttributeSet keyWord = new SimpleAttributeSet();
     StyleConstants.setForeground(keyWord, new Color(147, 35, 114));
-    if(to.equals(_username)) {
+    if (to.equals(_username)) {
       StyleConstants.setBold(keyWord, true);
+      playMsgSound();
     }
 
     SimpleAttributeSet timeStyle = new SimpleAttributeSet();
@@ -161,18 +164,18 @@ public class AdamperChat extends javax.swing.JFrame {
     } catch (Exception e) {
       appendError("appendThisUserMsg: " + e.toString());
     }
-  }  
-  
+  }
+
   public void disconnect() {
     try {
       _socket.close();
       appendMsg("Rozłączono");
-      setTitle(programTitle); 
+      setTitle(programTitle);
     } catch (Exception e) {
       appendError("Rozłączenie nie powiodło się...");
     }
     _isConnected = false;
-    
+
     logoutBtn.setEnabled(_isConnected);
     displayOnlineUsersBtn.setEnabled(_isConnected);
     sendBtn.setEnabled(_isConnected);
@@ -180,7 +183,7 @@ public class AdamperChat extends javax.swing.JFrame {
     connectBtn.setEnabled(!_isConnected);
   }
 
-  public void sendDisconnect() {
+  public void sendDisconnectMsg() {
     try {
       Message tempMsg = new Message(MsgType.Disconnect, _username, "DisconnectMsgFromUser");
       _writer.println(tempMsg.getMessage());
@@ -194,7 +197,7 @@ public class AdamperChat extends javax.swing.JFrame {
     return _reader.readLine();
   }
 
-  public void ListenThread() {
+  public void startListenThread() {
     ComingServMsgRunnable tempIR = new ComingServMsgRunnable(this);
     Thread IncomingReader = new Thread(tempIR);
     IncomingReader.start();
@@ -217,22 +220,22 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public synchronized void connect_ComingServMsg(String username) {
     // Connect message informs which users are now online and update local users list
-    startUsersUpdate(); 
+    startUsersUpdate();
     addUser_ComingServMsg(username);
   }
 
   public synchronized void startUsersUpdate() {
-    if(!updatingUsersList) {
+    if (!updatingUsersList) {
       _usersList = new ArrayList();
       updatingUsersList = true;
     }
   }
-  
+
   public synchronized void stopUsersUpdate() {
-    if(updatingUsersList) {
+    if (updatingUsersList) {
       updatingUsersList = false;
     }
-  }  
+  }
 
   public synchronized void done_ComingServMsg(String username) {
     stopUsersUpdate();
@@ -246,21 +249,51 @@ public class AdamperChat extends javax.swing.JFrame {
     mainTextArea.setCaretPosition(mainTextArea.getDocument().getLength());
   }
 
-  private void playMsgSound() {
+  private void loadProperties() {
+    Properties prop = new Properties();
+    InputStream input = null;
+
+    try {
+      input = this.getClass().getResourceAsStream("/adamperclient/config.properties");
+
+      // load a properties file
+      prop.load(input);
+
+      // get the property value and print it out
+      _host = prop.getProperty("host");
+      _port = Integer.parseInt(prop.getProperty("port"));
+
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } finally {
+      if (input != null) {
+        try {
+          input.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+  
+  private void loadSound() {
     try {
       _audioStream = AudioSystem.getAudioInputStream(AdamperChat.class.getResource("/adamperclient/glassy-soft-knock.wav"));
       _audioClip = AudioSystem.getClip();
       _audioClip.open(_audioStream);
-      _audioClip.start();
-    } catch (UnsupportedAudioFileException e) {
-      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
-    } catch (IOException e) {
-      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
-    } catch (LineUnavailableException e) {
-      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, e);
+    } catch (LineUnavailableException ex) {
+      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (UnsupportedAudioFileException ex) {
+      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+      Logger.getLogger(AdamperChat.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
-
+  
+  private void playMsgSound() {
+    _audioClip.start();
+  }  
+  
   @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
@@ -372,7 +405,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
   private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
-    sendDisconnect();
+    sendDisconnectMsg();
     disconnect();
   }//GEN-LAST:event_logoutBtnActionPerformed
 
@@ -403,7 +436,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
     if (!_isConnected) {
       try {
-        _socket = new Socket(_address, _port);
+        _socket = new Socket(_host, _port);
         InputStreamReader streamreader = new InputStreamReader(_socket.getInputStream());
         _reader = new BufferedReader(streamreader);
         _writer = new PrintWriter(_socket.getOutputStream());
@@ -412,19 +445,19 @@ public class AdamperChat extends javax.swing.JFrame {
         _writer.println(tempMsg.getMessage());
 
         _writer.flush();
-        
+
         _isConnected = true;
         logoutBtn.setEnabled(_isConnected);
         displayOnlineUsersBtn.setEnabled(_isConnected);
         sendBtn.setEnabled(_isConnected);
         messageTextField.setEnabled(_isConnected);
         connectBtn.setEnabled(!_isConnected);
-        setTitle(programTitle + ": " + _username);    
+        setTitle(programTitle + ": " + _username);
       } catch (Exception e) {
         appendError("Błąd połączenia. Spróbuj ponownie...");
       }
 
-      ListenThread();
+      startListenThread();
 
     } else if (_isConnected) {
       appendMsg("Jesteś już połączony...");
@@ -442,14 +475,16 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_displayOnlineUsersBtnActionPerformed
   
-  private String _username = "user" + (new Random()).nextInt(999);
-  private ArrayList<String> _usersList = new ArrayList();
+  // Loaded properties   
+  private String _host = "localhost"; // Default value
+  private int _port = 1995; // Default value
+    
   private boolean updatingUsersList = false;
   
-  private boolean _isConnected = false;
+  private String _username = "user" + (new Random()).nextInt(999);
+  private ArrayList<String> _usersList = new ArrayList();
   
-  private String _address = "localhost";
-  private int _port = 1995;
+  private boolean _isConnected = false;
   private Socket _socket;
   private BufferedReader _reader;
   private PrintWriter _writer;
@@ -474,4 +509,5 @@ public class AdamperChat extends javax.swing.JFrame {
   private javax.swing.JTextField messageTextField;
   private javax.swing.JButton sendBtn;
   // End of variables declaration//GEN-END:variables
+
 }
