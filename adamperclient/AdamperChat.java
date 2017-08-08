@@ -201,7 +201,7 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public synchronized void chat_ComingServMsg(Message msg) {
-    String from = msg.getUsername();
+    String from = msg.getFrom();
     String time = msg.getTime();
     String message = msg.getContent();
     String to = msg.getTo();

@@ -11,13 +11,13 @@ public class Message {
 
     if (msgParts.length >= 4) {
       // There must be at least 4 parts (content may be split unnecessarily)
-      // The following are required: type, username, date, time
+      // The following are required: type, from, date, time
       // Content in some types is not necesery
 
       _message = message.trim();
 
       setType(msgParts[0]);
-      setUsername(msgParts[1]);
+      setFrom(msgParts[1]);
       setDate(msgParts[2]);
       setTime(msgParts[3]);
 	  
@@ -32,9 +32,9 @@ public class Message {
     }
   }
   
-  public Message(MsgType type, String username, String content) throws Exception {
+  public Message(MsgType type, String usernameFrom, String content) throws Exception {
     setType(type);
-    setUsername(username);
+    setFrom(usernameFrom);
     setCurrentDateNTime();
     
     String[] arrCopy = content.split("/");
@@ -45,14 +45,14 @@ public class Message {
     buildMessage();
   }
 
-  public Message(MsgType type, String username, String to, String content) throws Exception {
-    this(type, username, content);
+  public Message(MsgType type, String usernameFrom, String to, String content) throws Exception {
+    this(type, usernameFrom, content);
     setTo(to);
     buildMessage();
   }
 
-  public Message(MsgType type, String username, Date dateObj, String content) throws Exception {
-    this(type, username, content);
+  public Message(MsgType type, String usernameFrom, Date dateObj, String content) throws Exception {
+    this(type, usernameFrom, content);
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
@@ -63,13 +63,13 @@ public class Message {
     buildMessage();
   }
 
-  public Message(MsgType type, String username, Date dateObj, String to, String content) throws Exception {
-    this(type, username, dateObj, content);
+  public Message(MsgType type, String usernameFrom, Date dateObj, String to, String content) throws Exception {
+    this(type, usernameFrom, dateObj, content);
     setTo(to);
     buildMessage();
   }
 
-  public String[] parseContent(String[] contParts) {
+  public String[] parseContent(String[] contentParts) {
     /*
       This function takes array of content for example: ["to:Adam", "content separatet", "by slash"]
       or ["content separatet", "by slash"].
@@ -79,17 +79,17 @@ public class Message {
     
     String contentFirst3letters = "";
     String possibleUsername = "";
-    if (contParts[0].length() > 3) { // if there is "to:" statement
-      contentFirst3letters = contParts[0].substring(0, 3).trim();
-      possibleUsername = contParts[0].substring(3).trim();
+    if (contentParts[0].length() > 3) { // if there is "to:" statement
+      contentFirst3letters = contentParts[0].substring(0, 3).trim();
+      possibleUsername = contentParts[0].substring(3).trim();
     }
 
     String to = "";
     int start = 1;
     if (contentFirst3letters.equals("to:") // Does content start with "to:"
             && !isBlank(possibleUsername) // Is word after "to:" not blank
-            && contParts.length >= 2 // Is there content after "to:" and username
-            && !isBlank(contParts[1])) { // Is there content after "to:" and username
+            && contentParts.length >= 2 // Is there content after "to:" and username
+            && !isBlank(contentParts[1])) { // Is there content after "to:" and username
 
       to = possibleUsername;
       start = 1;
@@ -99,11 +99,11 @@ public class Message {
     }
 
     String tempContent = ""; // Content may contain slashes which may cause making it divided.
-    for (int i = start; i < contParts.length; i++) {
+    for (int i = start; i < contentParts.length; i++) {
       if (i != start) {
         tempContent += _separator;
       }
-      tempContent += contParts[i];
+      tempContent += contentParts[i];
     }
 
     String[] Result = {to, tempContent};
@@ -122,8 +122,8 @@ public class Message {
     return _content;
   }
 
-  public String getUsername() {
-    return _username;
+  public String getFrom() {
+    return _from;
   }
 
   public Date getDateObj() throws ParseException {
@@ -146,7 +146,7 @@ public class Message {
 
   public String toString() {
     String result = "_type = " + _type.toString() + "\n"
-            + "_username = " + _username + "\n"
+            + "_from = " + _from + "\n"
             + "_time = " + _time + "\n"
             + "_date = " + _date + "\n"
             + "_to = " + _to + "\n"
@@ -195,11 +195,11 @@ public class Message {
     _type = MsgType.Done;
   }
 
-  private void setUsername(String username) throws Exception {
+  private void setFrom(String username) throws Exception {
     if (isBlank(username)) {
-      throw new Exception("Username is blank");
+      throw new Exception("From is blank");
     } else {
-      _username = username.trim();
+      _from = username.trim();
     }
   }
 
@@ -252,7 +252,7 @@ public class Message {
   private void buildMessage() {
     String[] tempMessage = new String[6];
     tempMessage[0] = _type.toString();
-    tempMessage[1] = _username;
+    tempMessage[1] = _from;
     tempMessage[2] = _date;
     tempMessage[3] = _time;
     tempMessage[4] = "to:" + _to;    
@@ -275,7 +275,7 @@ public class Message {
   }
 
   private MsgType _type = MsgType.None;
-  private String _username = "";
+  private String _from = "";
   private String _date = "";
   private String _time = "";
   private String _to = "all";

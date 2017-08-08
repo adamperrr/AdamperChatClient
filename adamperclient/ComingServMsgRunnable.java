@@ -21,10 +21,10 @@ public class ComingServMsgRunnable implements Runnable {
             _mainFrame.chat_ComingServMsg(tempMsg);
             break;
           case Connect:
-            _mainFrame.connect_ComingServMsg(tempMsg.getUsername());
+            _mainFrame.connect_ComingServMsg(tempMsg.getFrom());
             break;
           case Done:
-            _mainFrame.done_ComingServMsg(tempMsg.getUsername());
+            _mainFrame.done_ComingServMsg(tempMsg.getFrom());
             break;
         }
       }
