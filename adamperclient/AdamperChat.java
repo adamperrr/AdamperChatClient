@@ -49,19 +49,24 @@ public class AdamperChat extends javax.swing.JFrame {
     });
   }
 
-  public AdamperChat() {
+  public AdamperChat() {  
     initComponents();
     setTitle(programTitle);
     getRootPane().setDefaultButton(sendBtn); // Send as a main button
     
     loadProperties();
 
+    _isLoggedIn = false;
     _isConnected = false;
     logoutBtn.setEnabled(_isConnected);
     displayOnlineUsersBtn.setEnabled(_isConnected);
     sendBtn.setEnabled(_isConnected);
     messageTextField.setEnabled(_isConnected);
-    connectBtn.setEnabled(!_isConnected);        
+    
+    connectBtn.setEnabled(_isLoggedIn);    
+
+    Frame a = new Login(this);
+    a.setVisible(true);
   }
 
   public void appendError(String inputText) {
@@ -244,6 +249,18 @@ public class AdamperChat extends javax.swing.JFrame {
     _usersList.add(username.trim());
   }
 
+  public void setLoggedIn() {
+    _isLoggedIn = true;
+  }
+  
+  public void setNotLoggedIn() {
+    _isLoggedIn = false;
+  }  
+  
+  public boolean getLoggedIn() {
+    return _isLoggedIn;
+  }    
+  
   private void scroolDown() {
     mainTextArea.setCaretPosition(mainTextArea.getDocument().getLength());
   }
@@ -481,11 +498,12 @@ public class AdamperChat extends javax.swing.JFrame {
   private int _port = 1995; // Default value
   private boolean _soundOn = false;
     
-  private boolean updatingUsersList = false;
+  private boolean updatingUsersList = false; // While updating users list
   
   private String _username = "user" + (new Random()).nextInt(999);
   private ArrayList<String> _usersList = new ArrayList();
   
+  private boolean _isLoggedIn = false;
   private boolean _isConnected = false;
   private Socket _socket;
   private BufferedReader _reader;
