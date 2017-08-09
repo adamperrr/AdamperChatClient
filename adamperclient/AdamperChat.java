@@ -60,9 +60,7 @@ public class AdamperChat extends javax.swing.JFrame {
     Frame login = new Login(this);
     login.setVisible(true);
     
-    _isLoggedIn = false;
     _isConnected = false;
-        
     logoutBtn.setEnabled(_isConnected);
     displayOnlineUsersBtn.setEnabled(_isConnected);
     sendBtn.setEnabled(_isConnected);
@@ -253,18 +251,6 @@ public class AdamperChat extends javax.swing.JFrame {
   public void setUsername(String username) {
     _username = username;
   }
-  
-  public void setLoggedIn() {
-    _isLoggedIn = true;
-  }
-  
-  public void setNotLoggedIn() {
-    _isLoggedIn = false;
-  }  
-  
-  public boolean getLoggedIn() {
-    return _isLoggedIn;
-  }    
   
   public String getHost() {
     return _host;
@@ -529,7 +515,6 @@ public class AdamperChat extends javax.swing.JFrame {
   private String _username = "user" + (new Random()).nextInt(999);
   private ArrayList<String> _usersList = new ArrayList();
   
-  private boolean _isLoggedIn = false;
   private boolean _isConnected = false;
   private Socket _socket;
   private BufferedReader _reader;
