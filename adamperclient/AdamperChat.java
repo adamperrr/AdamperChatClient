@@ -346,6 +346,11 @@ public class AdamperChat extends javax.swing.JFrame {
     setIconImages(null);
     setMinimumSize(new java.awt.Dimension(410, 340));
     setPreferredSize(new java.awt.Dimension(410, 340));
+    addWindowListener(new java.awt.event.WindowAdapter() {
+      public void windowClosing(java.awt.event.WindowEvent evt) {
+        formWindowClosing(evt);
+      }
+    });
 
     logoutBtn.setText("Rozłącz");
     logoutBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -508,6 +513,11 @@ public class AdamperChat extends javax.swing.JFrame {
       appendMsg("\t" + currentUser);
     }
   }//GEN-LAST:event_displayOnlineUsersBtnActionPerformed
+
+  private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+    sendDisconnectMsg();
+    disconnect();
+  }//GEN-LAST:event_formWindowClosing
   
   // Loaded properties   
   private String _host = "localhost"; // Default value
