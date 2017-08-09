@@ -5,9 +5,11 @@
  */
 package adamperclient;
 
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.util.logging.*;
+import javax.imageio.*;
 import msg.*;
 
 /**
@@ -57,6 +59,7 @@ public class Login extends javax.swing.JFrame {
   public Login(AdamperChat frame) {
     _mainFrame = frame;
     initComponents();
+    setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/adamperclient/icon.png")));
   }
 
   /**
@@ -77,12 +80,12 @@ public class Login extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Log in to AdamperChat");
+    setIconImage(getIconImage());
     setMinimumSize(new java.awt.Dimension(440, 250));
     setName("loginFrame"); // NOI18N
     setPreferredSize(new java.awt.Dimension(440, 270));
     setResizable(false);
     setSize(new java.awt.Dimension(440, 270));
-    setType(java.awt.Window.Type.UTILITY);
     addWindowListener(new java.awt.event.WindowAdapter() {
       public void windowClosed(java.awt.event.WindowEvent evt) {
         formWindowClosed(evt);
@@ -210,7 +213,7 @@ public class Login extends javax.swing.JFrame {
       javax.swing.JOptionPane.showMessageDialog(null, resp.trim());
     }
   }//GEN-LAST:event_loginBtnActionPerformed
-
+  
   private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
     this.setVisible(false);
   }//GEN-LAST:event_formWindowClosed

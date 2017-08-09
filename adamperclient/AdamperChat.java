@@ -51,9 +51,10 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public AdamperChat() {  
     initComponents();
+    
     setTitle(programTitle);
     getRootPane().setDefaultButton(sendBtn); // Send as a main button
-    
+    setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/adamperclient/icon.png")));
     loadProperties();
 
     Frame login = new Login(this);
@@ -276,7 +277,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private void scroolDown() {
     mainTextArea.setCaretPosition(mainTextArea.getDocument().getLength());
   }
-
+  
   private void loadProperties() {
     Properties prop = new Properties();
     InputStream input = null;
@@ -342,6 +343,7 @@ public class AdamperChat extends javax.swing.JFrame {
     setTitle("AdamperChat");
     setAutoRequestFocus(false);
     setEnabled(false);
+    setIconImages(null);
     setMinimumSize(new java.awt.Dimension(410, 340));
     setPreferredSize(new java.awt.Dimension(410, 340));
 
