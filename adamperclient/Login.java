@@ -196,9 +196,9 @@ public class Login extends javax.swing.JFrame {
         }
 
       } catch (IOException ex) {
-        javax.swing.JOptionPane.showMessageDialog(null, "Błąd połączenia. - 1");
+        javax.swing.JOptionPane.showMessageDialog(null, "Błąd połączenia. (1)");
       } catch (Exception ex) {
-        javax.swing.JOptionPane.showMessageDialog(null, "Błąd połączenia. - 2");
+        javax.swing.JOptionPane.showMessageDialog(null, "Błąd połączenia. (2)");
       }
     }
     

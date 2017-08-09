@@ -227,6 +227,11 @@ public class AdamperChat extends javax.swing.JFrame {
     addUser_ComingServMsg(username);
   }
 
+  public synchronized void disconnect_ComingServMsg() {
+    appendMsg("Rozłączanie połączenia zlecone przez serwer w toku...");
+    disconnect();
+  }  
+  
   public synchronized void startUsersUpdate() {
     if (!updatingUsersList) {
       _usersList = new ArrayList();
