@@ -56,17 +56,17 @@ public class AdamperChat extends javax.swing.JFrame {
     
     loadProperties();
 
+    Frame login = new Login(this);
+    login.setVisible(true);
+    
     _isLoggedIn = false;
     _isConnected = false;
+        
     logoutBtn.setEnabled(_isConnected);
     displayOnlineUsersBtn.setEnabled(_isConnected);
     sendBtn.setEnabled(_isConnected);
     messageTextField.setEnabled(_isConnected);
-    
-    connectBtn.setEnabled(_isLoggedIn);    
-
-    Frame a = new Login(this);
-    a.setVisible(true);
+    connectBtn.setEnabled(!_isConnected);    
   }
 
   public void appendError(String inputText) {
@@ -249,6 +249,10 @@ public class AdamperChat extends javax.swing.JFrame {
     _usersList.add(username.trim());
   }
 
+  public void setUsername(String username) {
+    _username = username;
+  }
+  
   public void setLoggedIn() {
     _isLoggedIn = true;
   }
@@ -260,6 +264,14 @@ public class AdamperChat extends javax.swing.JFrame {
   public boolean getLoggedIn() {
     return _isLoggedIn;
   }    
+  
+  public String getHost() {
+    return _host;
+  }
+  
+  public int getPort() {
+    return _port;
+  }  
   
   private void scroolDown() {
     mainTextArea.setCaretPosition(mainTextArea.getDocument().getLength());
@@ -328,6 +340,8 @@ public class AdamperChat extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("AdamperChat");
+    setAutoRequestFocus(false);
+    setEnabled(false);
     setMinimumSize(new java.awt.Dimension(410, 340));
     setPreferredSize(new java.awt.Dimension(410, 340));
 

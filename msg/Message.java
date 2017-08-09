@@ -160,6 +160,8 @@ public class Message {
   private void setType(String type) throws Exception {
     if (type.equals("Chat")) {
       setChatType();
+    } else if (type.equals("Login")) {
+      setLoginType();
     } else if (type.equals("Connect")) {
       setConnectType();
     } else if (type.equals("Disconnect")) {
@@ -182,6 +184,10 @@ public class Message {
   private void setChatType() {
     _type = MsgType.Chat;
   }
+  
+  private void setLoginType() {
+    _type = MsgType.Login;
+  }  
 
   private void setConnectType() {
     _type = MsgType.Connect;

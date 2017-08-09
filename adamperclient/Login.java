@@ -5,6 +5,12 @@
  */
 package adamperclient;
 
+import java.io.*;
+import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import msg.*;
+
 /**
  *
  * @author adamp
@@ -72,11 +78,11 @@ public class Login extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Log in to AdamperChat");
-    setAlwaysOnTop(true);
     setMinimumSize(new java.awt.Dimension(440, 250));
     setName("loginFrame"); // NOI18N
-    setPreferredSize(new java.awt.Dimension(440, 250));
+    setPreferredSize(new java.awt.Dimension(440, 270));
     setResizable(false);
+    setSize(new java.awt.Dimension(440, 270));
     setType(java.awt.Window.Type.UTILITY);
     addWindowListener(new java.awt.event.WindowAdapter() {
       public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -90,8 +96,9 @@ public class Login extends javax.swing.JFrame {
     nickLabel.setText("Twój nick:");
 
     passwordLabel.setText("Twoje hasło:");
+    passwordLabel.setEnabled(false);
 
-    passwordField.setPreferredSize(new java.awt.Dimension(6, 20));
+    passwordField.setEditable(false);
 
     loginBtn.setText("Zaloguj się");
     loginBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -137,7 +144,7 @@ public class Login extends javax.swing.JFrame {
         .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(15, 15, 15)
         .addComponent(loginBtn)
-        .addContainerGap(30, Short.MAX_VALUE))
+        .addGap(30, 30, 30))
     );
 
     pack();
@@ -145,12 +152,64 @@ public class Login extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
   private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-    if(_mainFrame == null)
-      javax.swing.JOptionPane.showMessageDialog(null, "null");
-    else
-      javax.swing.JOptionPane.showMessageDialog(null, "ok");
+    String nick = nickField.getText().trim();
     
-    this.setVisible(false);
+    boolean loggedIn = false;
+    String resp = "";
+    if(!nick.equals("") && nick.length() > 3) {
+      Socket socket;
+      InputStreamReader streamreader = null;
+      Message tempMsg;
+
+      try {
+        socket = new Socket(_mainFrame.getHost(), _mainFrame.getPort());
+        streamreader = new InputStreamReader(socket.getInputStream());
+        BufferedReader reader = new BufferedReader(streamreader);
+        PrintWriter writer = new PrintWriter(socket.getOutputStream());
+        
+        tempMsg = new Message(MsgType.Login, nick, "LoginMsg");
+        writer.println(tempMsg.getMessage());
+        writer.flush();
+        
+        boolean out = false;
+        int i = 0;
+        String stream;
+        while ((stream = reader.readLine()) != null) {
+          Message receivedMsg = new Message(stream);
+          switch(receivedMsg.getType()) {
+            case Connect:
+              loggedIn = true;
+              resp = receivedMsg.getContent();
+              out = true;
+              break;
+            case Disconnect:
+              loggedIn = false;
+              resp = receivedMsg.getContent();
+              out = true;
+              break;
+          }
+          i++;
+          if(i > 200) { break; }
+          if(out) { break; }
+        }
+
+      } catch (IOException ex) {
+        javax.swing.JOptionPane.showMessageDialog(null, "Błąd połączenia. - 1");
+      } catch (Exception ex) {
+        javax.swing.JOptionPane.showMessageDialog(null, "Błąd połączenia. - 2");
+      }
+    }
+    
+    if(!nick.equals("") && nick.length() > 3 && loggedIn) {
+      _mainFrame.setUsername(nick);
+      _mainFrame.setAutoRequestFocus(true);
+      _mainFrame.setEnabled(true);
+      this.setVisible(false);
+    } else if(nick.equals("") || nick.length() <= 3 && !loggedIn) {
+      javax.swing.JOptionPane.showMessageDialog(null, "Nick musi być dłuższy niż 3 litery.");
+    } else if(!resp.equals("") && !loggedIn) {
+      javax.swing.JOptionPane.showMessageDialog(null, resp.trim());
+    }
   }//GEN-LAST:event_loginBtnActionPerformed
 
   private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
