@@ -1,6 +1,7 @@
 package adamperclient;
 
 import java.util.*;
+import java.util.logging.*;
 import java.io.*;
 import java.net.*;
 import java.awt.*;
@@ -8,8 +9,6 @@ import java.awt.event.*;
 import java.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
-
-import java.util.logging.*;
 import javax.sound.sampled.*;
 
 import msg.*;
@@ -517,7 +516,7 @@ public class AdamperChat extends javax.swing.JFrame {
     
   private boolean updatingUsersList = false; // While updating users list
   
-  private String _username = "user" + (new Random()).nextInt(999);
+  private String _username = "username" + (new Random()).nextInt(999);
   private ArrayList<String> _usersList = new ArrayList();
   
   private boolean _isConnected = false;
