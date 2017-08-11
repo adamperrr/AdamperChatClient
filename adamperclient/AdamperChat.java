@@ -189,8 +189,8 @@ public class AdamperChat extends javax.swing.JFrame {
   public void disconnect() {
     if (!_isConnected) {
       return;
-    }    
-    
+    }
+
     try {
       _socket.close();
       appendMsg("Rozłączono");
@@ -207,7 +207,7 @@ public class AdamperChat extends javax.swing.JFrame {
     if (!_isConnected) {
       return;
     }
-    
+
     try {
       Message tempMsg = new Message(MsgType.Disconnect, _username, "DisconnectMsgFromUser");
       _writer.println(tempMsg.getMessage());
@@ -215,7 +215,7 @@ public class AdamperChat extends javax.swing.JFrame {
     } catch (Exception e) {
       appendError("Błąd wysyłania wiadomości o rozłączeniu...");
     }
-    
+
     disconnect();
   }
 
@@ -224,11 +224,11 @@ public class AdamperChat extends javax.swing.JFrame {
     Thread IncomingReader = new Thread(temp);
     IncomingReader.start();
   }
-  
+
   public String getReaderLine_ComingServMsg() throws IOException {
     return _reader.readLine();
   }
-  
+
   public synchronized void connect_ComingServMsg(String username) {
     // Connect message informs which users are now online and starts update of local users list
     startUsersUpdate();
@@ -239,7 +239,7 @@ public class AdamperChat extends javax.swing.JFrame {
     appendMsg("Rozłączanie połączenia zlecone przez serwer...");
     disconnect();
   }
-  
+
   public synchronized void chat_ComingServMsg(Message msg) {
     String from = msg.getFrom();
     String time = msg.getTime();
@@ -271,7 +271,7 @@ public class AdamperChat extends javax.swing.JFrame {
       updatingUsersList = false;
     }
   }
-  
+
   public synchronized void addUserToList(String username) {
     _usersList.add(username.trim());
   }
@@ -328,7 +328,24 @@ public class AdamperChat extends javax.swing.JFrame {
       }
     }
   }
-  
+
+  private void displayOnlineUsers() {
+    if (!_isConnected) {
+      return;
+    }
+
+    int usersNum = _usersList.size();
+
+    if (usersNum > 0) {
+      appendMsg("\n Użytkownicy online :");
+      for (String currentUser : _usersList) {
+        appendMsg("\t" + currentUser);
+      }
+    } else {
+      appendMsg("\n Aktualnie brak użytkowników online.");
+    }
+  }
+
   private void sendMsg() {
     if (!_isConnected) {
       return;
@@ -347,7 +364,7 @@ public class AdamperChat extends javax.swing.JFrame {
     clearTextField();
     messageTextField.requestFocus();
   }
-  
+
   private void scroolDown() {
     mainTextArea.setCaretPosition(mainTextArea.getDocument().getLength());
   }
@@ -359,7 +376,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private void clearTextField() {
     messageTextField.setText("");
   }
-  
+
   private void playMsgSound() {
     if (!_soundOn) {
       return;
@@ -502,18 +519,10 @@ public class AdamperChat extends javax.swing.JFrame {
   }//GEN-LAST:event_logoutBtnActionPerformed
 
   private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
-    if (!_isConnected) { 
-      return;
-    }
-    
     sendMsg();
   }//GEN-LAST:event_sendBtnActionPerformed
 
   private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
-    if (_isConnected) {
-      return;
-    }
-    
     connectToServer();
   }//GEN-LAST:event_connectBtnActionPerformed
 
@@ -522,21 +531,10 @@ public class AdamperChat extends javax.swing.JFrame {
   }//GEN-LAST:event_clearScreenBtnActionPerformed
 
   private void displayOnlineUsersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_displayOnlineUsersBtnActionPerformed
-    if(!_isConnected) {
-      return;
-    }
-    
-    appendMsg("\n Użytkownicy online :");
-    for (String currentUser : _usersList) {
-      appendMsg("\t" + currentUser);
-    }
+    displayOnlineUsers();
   }//GEN-LAST:event_displayOnlineUsersBtnActionPerformed
 
   private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-    if(!_isConnected) {
-      return;
-    }
-    
     disconnectFromServer();
   }//GEN-LAST:event_formWindowClosing
 
