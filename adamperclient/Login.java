@@ -10,6 +10,8 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.*;
 import javax.imageio.*;
+import javax.swing.*;
+
 import msg.*;
 
 /**
@@ -73,13 +75,11 @@ public class Login extends javax.swing.JFrame {
 
     nickField = new javax.swing.JTextField();
     nickLabel = new javax.swing.JLabel();
-    passwordLabel = new javax.swing.JLabel();
-    passwordField = new javax.swing.JTextField();
     loginBtn = new javax.swing.JButton();
     mainTitle = new javax.swing.JLabel();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("Log in to AdamperChat");
+    setTitle("Logowanie AdamperChat");
     setIconImage(getIconImage());
     setMinimumSize(new java.awt.Dimension(440, 250));
     setName("loginFrame"); // NOI18N
@@ -96,11 +96,6 @@ public class Login extends javax.swing.JFrame {
     });
 
     nickLabel.setText("Twój nick:");
-
-    passwordLabel.setText("Twoje hasło:");
-    passwordLabel.setEnabled(false);
-
-    passwordField.setEditable(false);
 
     loginBtn.setText("Zaloguj się");
     loginBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -122,8 +117,6 @@ public class Login extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(nickLabel)
           .addComponent(nickField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(passwordLabel)
-          .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(loginBtn))
         .addContainerGap(84, Short.MAX_VALUE))
       .addGroup(layout.createSequentialGroup()
@@ -140,13 +133,9 @@ public class Login extends javax.swing.JFrame {
         .addComponent(nickLabel)
         .addGap(5, 5, 5)
         .addComponent(nickField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(15, 15, 15)
-        .addComponent(passwordLabel)
-        .addGap(5, 5, 5)
-        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(15, 15, 15)
+        .addGap(25, 25, 25)
         .addComponent(loginBtn)
-        .addGap(30, 30, 30))
+        .addGap(20, 20, 20))
     );
 
     pack();
@@ -196,9 +185,9 @@ public class Login extends javax.swing.JFrame {
         }
 
       } catch (IOException ex) {
-        javax.swing.JOptionPane.showMessageDialog(null, "Błąd połączenia. (1)");
+        JOptionPane.showMessageDialog(this, "Błąd połączenia. (1)", "Błąd", JOptionPane.ERROR_MESSAGE);
       } catch (Exception ex) {
-        javax.swing.JOptionPane.showMessageDialog(null, "Błąd połączenia. (2)");
+        JOptionPane.showMessageDialog(this, "Błąd połączenia. (2)", "Błąd", JOptionPane.ERROR_MESSAGE);
       }
     }
     
@@ -208,9 +197,9 @@ public class Login extends javax.swing.JFrame {
       _mainFrame.setEnabled(true);
       this.setVisible(false);
     } else if(nick.equals("") || nick.length() <= 3 && !loggedIn) {
-      javax.swing.JOptionPane.showMessageDialog(null, "Nick musi być dłuższy niż 3 litery.");
+      JOptionPane.showMessageDialog(this, "Nick musi być dłuższy niż 3 litery.", "Błąd", JOptionPane.INFORMATION_MESSAGE);
     } else if(!resp.equals("") && !loggedIn) {
-      javax.swing.JOptionPane.showMessageDialog(null, resp.trim());
+      JOptionPane.showMessageDialog(this, resp.trim(), "Błąd", JOptionPane.INFORMATION_MESSAGE);
     }
   }//GEN-LAST:event_loginBtnActionPerformed
   
@@ -229,7 +218,5 @@ public class Login extends javax.swing.JFrame {
   private javax.swing.JLabel mainTitle;
   private javax.swing.JTextField nickField;
   private javax.swing.JLabel nickLabel;
-  private javax.swing.JTextField passwordField;
-  private javax.swing.JLabel passwordLabel;
   // End of variables declaration//GEN-END:variables
 }
