@@ -58,8 +58,6 @@ public class AdamperChat extends javax.swing.JFrame {
 
     Frame login = new LoginBox(this);
     login.setVisible(true);
-
-    _isConnected = false;
     setButtons();
   }
 
