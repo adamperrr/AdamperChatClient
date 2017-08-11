@@ -10,9 +10,8 @@ public class ComingServMsgRunnable implements Runnable {
 
   @Override
   public void run() {
-    String stream;
-
     try {
+      String stream = null;
       while ((stream = _mainFrame.getReaderLine_ComingServMsg()) != null) {
         Message receivedMsg = new Message(stream);
 
@@ -40,6 +39,6 @@ public class ComingServMsgRunnable implements Runnable {
     }
   }
 
-  private AdamperChat _mainFrame;
+  private AdamperChat _mainFrame = null;
 
 }

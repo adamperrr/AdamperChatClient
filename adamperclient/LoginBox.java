@@ -18,8 +18,8 @@ import msg.*;
  *
  * @author adamp
  */
-public class Login extends javax.swing.JFrame {
-  
+public class LoginBox extends javax.swing.JFrame {
+
   /**
    * @param args the command line arguments
    */
@@ -37,33 +37,110 @@ public class Login extends javax.swing.JFrame {
         }
       }
     } catch (ClassNotFoundException ex) {
-      java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(LoginBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (InstantiationException ex) {
-      java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(LoginBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (IllegalAccessException ex) {
-      java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(LoginBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-      java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(LoginBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
     //</editor-fold>
 
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        new Login(null).setVisible(true);
+        new LoginBox(null).setVisible(true);
       }
     });
   }
-  
+
   /**
    * Creates new form Login
    */
-  public Login(AdamperChat frame) {
+  public LoginBox(AdamperChat frame) {
     _mainFrame = frame;
     initComponents();
     setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/adamperclient/icon.png")));
   }
 
+  private void login() {
+    String username = usernameField.getText().trim();
+    String responseMsg = "";
+    Message tempMsg = null;
+
+    if (!checkNick(username)) {
+      errorAlert("Nick musi być dłuższy niż 3 litery.");
+      return;
+    }
+
+    try {
+      socket = new Socket(_mainFrame.getHost(), _mainFrame.getPort());
+      reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      writer = new PrintWriter(socket.getOutputStream());
+
+      tempMsg = new Message(MsgType.Login, username, "LoginMsg");
+      writer.println(tempMsg.getMessage());
+      writer.flush();
+
+      boolean out = false;
+      String stream;
+      int i = 0;
+      while ((stream = reader.readLine()) != null) {
+        Message receivedMsg = new Message(stream);
+        switch (receivedMsg.getType()) {
+          case Connect:
+            _loggedIn = true;
+            responseMsg = receivedMsg.getContent();
+            out = true;
+            break;
+          case Disconnect:
+            _loggedIn = false;
+            responseMsg = receivedMsg.getContent();
+            out = true;
+            break;
+        }
+        i++;
+        
+        if (out || i > 200) {
+          break;
+        }
+      }
+
+    } catch (IOException ex) {
+      errorAlert("Błąd połączenia. (1)");
+
+    } catch (Exception ex) {
+      errorAlert("Błąd połączenia. (2)");
+    }
+    
+    setLoginResults(username, responseMsg);
+  }
+
+  private void setLoginResults(String username, String responseMsg) {
+    if (checkNick(username) && _loggedIn) {
+      _mainFrame.setUsername(username);
+      _mainFrame.setAutoRequestFocus(true);
+      _mainFrame.setEnabled(true);
+      this.setVisible(false);
+
+    } else if (!checkNick(username) && !_loggedIn) {
+      errorAlert("Nick musi być dłuższy niż 3 litery.");
+
+    } else if (!responseMsg.equals("") && !_loggedIn) {
+      errorAlert(responseMsg.trim());
+    }
+  }
+
+  private boolean checkNick(String nick) {
+    return !nick.equals("") && nick.length() > 3;
+  }
+
+  private void errorAlert(String text) {
+      JOptionPane.showMessageDialog(this, text.trim(), "Błąd", JOptionPane.INFORMATION_MESSAGE);
+  }
+  
   /**
    * This method is called from within the constructor to initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,8 +150,8 @@ public class Login extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    nickField = new javax.swing.JTextField();
-    nickLabel = new javax.swing.JLabel();
+    usernameField = new javax.swing.JTextField();
+    usernameLabel = new javax.swing.JLabel();
     loginBtn = new javax.swing.JButton();
     mainTitle = new javax.swing.JLabel();
 
@@ -95,7 +172,7 @@ public class Login extends javax.swing.JFrame {
       }
     });
 
-    nickLabel.setText("Twój nick:");
+    usernameLabel.setText("Twoja nazwa użytkownika:");
 
     loginBtn.setText("Zaloguj się");
     loginBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -115,8 +192,8 @@ public class Login extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addGap(70, 70, 70)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(nickLabel)
-          .addComponent(nickField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(usernameLabel)
+          .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(loginBtn))
         .addContainerGap(84, Short.MAX_VALUE))
       .addGroup(layout.createSequentialGroup()
@@ -130,9 +207,9 @@ public class Login extends javax.swing.JFrame {
         .addGap(10, 10, 10)
         .addComponent(mainTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(12, 12, 12)
-        .addComponent(nickLabel)
+        .addComponent(usernameLabel)
         .addGap(5, 5, 5)
-        .addComponent(nickField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(25, 25, 25)
         .addComponent(loginBtn)
         .addGap(20, 20, 20))
@@ -143,66 +220,9 @@ public class Login extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
   private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-    String nick = nickField.getText().trim();
-    
-    boolean loggedIn = false;
-    String resp = "";
-    if(!nick.equals("") && nick.length() > 3) {
-      Socket socket;
-      InputStreamReader streamreader = null;
-      Message tempMsg;
-
-      try {
-        socket = new Socket(_mainFrame.getHost(), _mainFrame.getPort());
-        streamreader = new InputStreamReader(socket.getInputStream());
-        BufferedReader reader = new BufferedReader(streamreader);
-        PrintWriter writer = new PrintWriter(socket.getOutputStream());
-        
-        tempMsg = new Message(MsgType.Login, nick, "LoginMsg");
-        writer.println(tempMsg.getMessage());
-        writer.flush();
-        
-        boolean out = false;
-        int i = 0;
-        String stream;
-        while ((stream = reader.readLine()) != null) {
-          Message receivedMsg = new Message(stream);
-          switch(receivedMsg.getType()) {
-            case Connect:
-              loggedIn = true;
-              resp = receivedMsg.getContent();
-              out = true;
-              break;
-            case Disconnect:
-              loggedIn = false;
-              resp = receivedMsg.getContent();
-              out = true;
-              break;
-          }
-          i++;
-          if(i > 200) { break; }
-          if(out) { break; }
-        }
-
-      } catch (IOException ex) {
-        JOptionPane.showMessageDialog(this, "Błąd połączenia. (1)", "Błąd", JOptionPane.ERROR_MESSAGE);
-      } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this, "Błąd połączenia. (2)", "Błąd", JOptionPane.ERROR_MESSAGE);
-      }
-    }
-    
-    if(!nick.equals("") && nick.length() > 3 && loggedIn) {
-      _mainFrame.setUsername(nick);
-      _mainFrame.setAutoRequestFocus(true);
-      _mainFrame.setEnabled(true);
-      this.setVisible(false);
-    } else if(nick.equals("") || nick.length() <= 3 && !loggedIn) {
-      JOptionPane.showMessageDialog(this, "Nick musi być dłuższy niż 3 litery.", "Błąd", JOptionPane.INFORMATION_MESSAGE);
-    } else if(!resp.equals("") && !loggedIn) {
-      JOptionPane.showMessageDialog(this, resp.trim(), "Błąd", JOptionPane.INFORMATION_MESSAGE);
-    }
+    login();
   }//GEN-LAST:event_loginBtnActionPerformed
-  
+
   private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
     this.setVisible(false);
   }//GEN-LAST:event_formWindowClosed
@@ -212,11 +232,16 @@ public class Login extends javax.swing.JFrame {
   }//GEN-LAST:event_formWindowClosing
 
   private AdamperChat _mainFrame = null;
-  
+  private boolean _loggedIn = false;
+
+  Socket socket = null;
+  BufferedReader reader = null;
+  PrintWriter writer = null;
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton loginBtn;
   private javax.swing.JLabel mainTitle;
-  private javax.swing.JTextField nickField;
-  private javax.swing.JLabel nickLabel;
+  private javax.swing.JTextField usernameField;
+  private javax.swing.JLabel usernameLabel;
   // End of variables declaration//GEN-END:variables
 }

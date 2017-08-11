@@ -45,8 +45,8 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="nickLabel" min="-2" max="-2" attributes="0"/>
-                  <Component id="nickField" min="-2" pref="300" max="-2" attributes="0"/>
+                  <Component id="usernameLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="usernameField" min="-2" pref="300" max="-2" attributes="0"/>
                   <Component id="loginBtn" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="84" max="32767" attributes="0"/>
@@ -64,9 +64,9 @@
               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
               <Component id="mainTitle" min="-2" pref="51" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-              <Component id="nickLabel" min="-2" max="-2" attributes="0"/>
+              <Component id="usernameLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-              <Component id="nickField" min="-2" pref="25" max="-2" attributes="0"/>
+              <Component id="usernameField" min="-2" pref="25" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
               <Component id="loginBtn" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
@@ -75,11 +75,11 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JTextField" name="nickField">
+    <Component class="javax.swing.JTextField" name="usernameField">
     </Component>
-    <Component class="javax.swing.JLabel" name="nickLabel">
+    <Component class="javax.swing.JLabel" name="usernameLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Tw&#xf3;j nick:"/>
+        <Property name="text" type="java.lang.String" value="Twoja nazwa u&#x17c;ytkownika:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="loginBtn">

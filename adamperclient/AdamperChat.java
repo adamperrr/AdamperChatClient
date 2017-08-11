@@ -56,7 +56,7 @@ public class AdamperChat extends javax.swing.JFrame {
     setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/adamperclient/icon.png")));
     loadProperties();
 
-    Frame login = new Login(this);
+    Frame login = new LoginBox(this);
     login.setVisible(true);
 
     _isConnected = false;
@@ -140,7 +140,6 @@ public class AdamperChat extends javax.swing.JFrame {
 
   public void appendPrivMsg(String inputText, String time, String to, String from) {
     StyledDocument doc = mainTextArea.getStyledDocument();
-
     from = from.trim() + ": ";
     inputText = inputText.trim() + "\n";
 
@@ -186,7 +185,7 @@ public class AdamperChat extends javax.swing.JFrame {
       appendError("Błąd połączenia. Spróbuj ponownie...");
     }
 
-    start_ComingServMsg();
+    startComingServMsg();
   }
 
   public void disconnect() {
@@ -222,7 +221,7 @@ public class AdamperChat extends javax.swing.JFrame {
     disconnect();
   }
 
-  public void start_ComingServMsg() {
+  public void startComingServMsg() {
     ComingServMsgRunnable temp = new ComingServMsgRunnable(this);
     Thread IncomingReader = new Thread(temp);
     IncomingReader.start();
@@ -312,9 +311,7 @@ public class AdamperChat extends javax.swing.JFrame {
 
     try {
       input = this.getClass().getResourceAsStream("/adamperclient/config.properties");
-
-      // load a properties file
-      prop.load(input);
+      prop.load(input); // load a properties file
 
       // get the property value and print it out
       _host = prop.getProperty("host");
@@ -546,22 +543,19 @@ public class AdamperChat extends javax.swing.JFrame {
   }//GEN-LAST:event_formWindowClosing
 
   // Loaded properties   
-  private String _host = "localhost"; // Default value
-  private int _port = 1995; // Default value
-  private boolean _soundOn = false;
-
-  private boolean updatingUsersList = false; // While updating users list
-
-  private String _username = "username" + (new Random()).nextInt(999);
+  private String _host = "localhost"; // Default value - loaded from properties
+  private int _port = 1995; // Default value - loaded from properties
+  private boolean _soundOn = false; // Default value - loaded from properties
+  private boolean updatingUsersList = false; // Flag of updating users list
+  private String _username = "username" + (new Random()).nextInt(999); // Will be overrided by user from Login from
   private ArrayList<String> _usersList = new ArrayList();
-
   private boolean _isConnected = false;
-  private Socket _socket;
-  private BufferedReader _reader;
-  private PrintWriter _writer;
+  private Socket _socket = null;
+  private BufferedReader _reader = null;
+  private PrintWriter _writer = null;
 
-  AudioInputStream _audioStream;
-  Clip _audioClip;
+  private AudioInputStream _audioStream = null;
+  private Clip _audioClip = null;
   private String programTitle = "AdamperChat";
   private Action accept = new AbstractAction("Accept") { // Afrer clicking enter action
     @Override
