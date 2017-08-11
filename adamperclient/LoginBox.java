@@ -8,6 +8,7 @@ package adamperclient;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
 import javax.imageio.*;
 import javax.swing.*;
@@ -77,6 +78,7 @@ public class LoginBox extends javax.swing.JFrame {
 
     try {
       socket = new Socket(_mainFrame.getHost(), _mainFrame.getPort());
+      socket.setSoTimeout(5_000);
       reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       writer = new PrintWriter(socket.getOutputStream());
 
@@ -84,27 +86,19 @@ public class LoginBox extends javax.swing.JFrame {
       writer.println(tempMsg.getMessage());
       writer.flush();
 
-      boolean out = false;
-      String stream;
-      int i = 0;
-      while ((stream = reader.readLine()) != null) {
-        Message receivedMsg = new Message(stream);
+      String line = null;
+      line = reader.readLine();
+      if(line != null) {
+        Message receivedMsg = new Message(line);
         switch (receivedMsg.getType()) {
           case Connect:
             _loggedIn = true;
             responseMsg = receivedMsg.getContent();
-            out = true;
             break;
           case Disconnect:
             _loggedIn = false;
             responseMsg = receivedMsg.getContent();
-            out = true;
             break;
-        }
-        i++;
-        
-        if (out || i > 200) {
-          break;
         }
       }
 
