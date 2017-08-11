@@ -13,18 +13,18 @@ public class ComingServMsgRunnable implements Runnable {
     String stream;
 
     try {
-      while ((stream = _mainFrame.getReaderLine()) != null) {
+      while ((stream = _mainFrame.getReaderLine_ComingServMsg()) != null) {
         Message receivedMsg = new Message(stream);
 
         switch (receivedMsg.getType()) {
-          case Chat:
-            _mainFrame.chat_ComingServMsg(receivedMsg);
-            break;
           case Connect:
             _mainFrame.connect_ComingServMsg(receivedMsg.getFrom());
             break;
           case Disconnect:
             _mainFrame.disconnect_ComingServMsg();
+            break;
+          case Chat:
+            _mainFrame.chat_ComingServMsg(receivedMsg);
             break;
           case Done:
             _mainFrame.done_ComingServMsg(receivedMsg.getFrom());
