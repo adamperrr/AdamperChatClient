@@ -547,7 +547,7 @@ public class AdamperChat extends javax.swing.JFrame {
   private int _port = 1995; // Default value - loaded from properties
   private boolean _soundOn = false; // Default value - loaded from properties
   private boolean updatingUsersList = false; // Flag of updating users list
-  private String _username = "username" + (new Random()).nextInt(999); // Will be overrided by user from Login from
+  private String _username = "username" + (new Random()).nextInt(999); // Will be overrided by usermane from LoginBox from
   private ArrayList<String> _usersList = new ArrayList();
   private boolean _isConnected = false;
   private Socket _socket = null;

@@ -11,9 +11,9 @@ public class ComingServMsgRunnable implements Runnable {
   @Override
   public void run() {
     try {
-      String stream = null;
-      while ((stream = _mainFrame.getReaderLine_ComingServMsg()) != null) {
-        Message receivedMsg = new Message(stream);
+      String line = null;
+      while ((line = _mainFrame.getReaderLine_ComingServMsg()) != null) {
+        Message receivedMsg = new Message(line);
 
         switch (receivedMsg.getType()) {
           case Connect:
@@ -35,7 +35,7 @@ public class ComingServMsgRunnable implements Runnable {
     } catch (java.net.SocketException e) {
       // This exception is thrown after every disconnect of client.
     } catch (Exception e) {
-      _mainFrame.appendError("run: " + e.toString());
+      _mainFrame.appendError("ComingServMsgRunnable - run: " + e.toString());
     }
   }
 
