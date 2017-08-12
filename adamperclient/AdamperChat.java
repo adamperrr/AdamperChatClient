@@ -260,15 +260,15 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   public synchronized void startUsersUpdate() {
-    if (!updatingUsersList) {
+    if (!_updatingUsersList) {
       _usersList = new ArrayList();
-      updatingUsersList = true;
+      _updatingUsersList = true;
     }
   }
 
   public synchronized void stopUsersUpdate() {
-    if (updatingUsersList) {
-      updatingUsersList = false;
+    if (_updatingUsersList) {
+      _updatingUsersList = false;
     }
   }
 
@@ -542,8 +542,8 @@ public class AdamperChat extends javax.swing.JFrame {
   private String _host = "localhost"; // Default value - loaded from properties
   private int _port = 1995; // Default value - loaded from properties
   private boolean _soundOn = false; // Default value - loaded from properties
-  private boolean updatingUsersList = false; // Flag of updating users list
-  private String _username = "username" + (new Random()).nextInt(999); // Will be overrided by usermane from LoginBox from
+  private boolean _updatingUsersList = false; // Flag of updating users list
+  private String _username = "username"; // Will be overrided by usermane from LoginBox from
   private ArrayList<String> _usersList = new ArrayList();
   private boolean _isConnected = false;
   private Socket _socket = null;

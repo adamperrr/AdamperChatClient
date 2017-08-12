@@ -68,47 +68,6 @@ public class Message {
     setTo(to);
     buildMessage();
   }
-
-  public String[] parseContent(String[] contentParts) {
-    /*
-      This function takes array of content for example: ["to:Adam", "content separatet", "by slash"]
-      or ["content separatet", "by slash"].
-      It must determine whether or not the table contains the addressee
-      and return the relevant data.
-    */
-    
-    String contentFirst3letters = "";
-    String possibleUsername = "";
-    if (contentParts[0].length() > 3) { // if there is "to:" statement
-      contentFirst3letters = contentParts[0].substring(0, 3).trim();
-      possibleUsername = contentParts[0].substring(3).trim();
-    }
-
-    String to = "";
-    int start = 1;
-    if (contentFirst3letters.equals("to:") // Does content start with "to:"
-            && !isBlank(possibleUsername) // Is word after "to:" not blank
-            && contentParts.length >= 2 // Is there content after "to:" and username
-            && !isBlank(contentParts[1])) { // Is there content after "to:" and username
-
-      to = possibleUsername;
-      start = 1;
-    } else {
-      to = "all";
-      start = 0;
-    }
-
-    String tempContent = ""; // Content may contain slashes which may cause making it divided.
-    for (int i = start; i < contentParts.length; i++) {
-      if (i != start) {
-        tempContent += _separator;
-      }
-      tempContent += contentParts[i];
-    }
-
-    String[] Result = {to, tempContent};
-    return Result;
-  }  
   
   public String getMessage() {
     return _message;
@@ -156,6 +115,47 @@ public class Message {
 
     return result;
   }
+  
+  private String[] parseContent(String[] contentParts) {
+    /*
+      This function takes array of content for example: ["to:Adam", "content separatet", "by slash"]
+      or ["content separatet", "by slash"].
+      It must determine whether or not the table contains the addressee
+      and return the relevant data.
+    */
+    
+    String contentFirst3letters = "";
+    String possibleUsername = "";
+    if (contentParts[0].length() > 3) { // if there is "to:" statement
+      contentFirst3letters = contentParts[0].substring(0, 3).trim();
+      possibleUsername = contentParts[0].substring(3).trim();
+    }
+
+    String to = "";
+    int start = 1;
+    if (contentFirst3letters.equals("to:") // Does content start with "to:"
+            && !isBlank(possibleUsername) // Is word after "to:" not blank
+            && contentParts.length >= 2 // Is there content after "to:" and username
+            && !isBlank(contentParts[1])) { // Is there content after "to:" and username
+
+      to = possibleUsername;
+      start = 1;
+    } else {
+      to = "all";
+      start = 0;
+    }
+
+    String tempContent = ""; // Content may contain slashes which may cause making it divided.
+    for (int i = start; i < contentParts.length; i++) {
+      if (i != start) {
+        tempContent += _separator;
+      }
+      tempContent += contentParts[i];
+    }
+
+    String[] Result = {to, tempContent};
+    return Result;
+  }  
   
   private void setType(String type) throws Exception {
     if (type.equals("Chat")) {
