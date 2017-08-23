@@ -362,7 +362,6 @@ public class AdamperChat extends javax.swing.JFrame {
     }
 
     clearTextField();
-    messageTextField.requestFocus();
   }
 
   private void scroolDown() {
@@ -375,6 +374,7 @@ public class AdamperChat extends javax.swing.JFrame {
 
   private void clearTextField() {
     messageTextField.setText("");
+    messageTextField.requestFocus();
   }
 
   private void playMsgSound() {
@@ -386,7 +386,7 @@ public class AdamperChat extends javax.swing.JFrame {
       _audioStream = AudioSystem.getAudioInputStream(AdamperChat.class.getResource("/adamperclient/glassy-soft-knock.wav"));
       AudioFormat format = _audioStream.getFormat();
       DataLine.Info info = new DataLine.Info(Clip.class, format);
-      _audioClip = (Clip)AudioSystem.getLine(info);
+      _audioClip = (Clip) AudioSystem.getLine(info);
       _audioClip.open(_audioStream);
       _audioClip.start();
     } catch (LineUnavailableException ex) {
