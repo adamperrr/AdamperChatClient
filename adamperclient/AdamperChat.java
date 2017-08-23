@@ -109,7 +109,7 @@ public class AdamperChat extends javax.swing.JFrame {
       scroolDown();
       playMsgSound();
     } catch (Exception e) {
-      appendError("appendUserMsg: " + e.toString());
+      appendError("appendUserMsg: " + e.toString() + " " + e.getStackTrace());
     }
   }
 
@@ -384,7 +384,9 @@ public class AdamperChat extends javax.swing.JFrame {
 
     try {
       _audioStream = AudioSystem.getAudioInputStream(AdamperChat.class.getResource("/adamperclient/glassy-soft-knock.wav"));
-      _audioClip = AudioSystem.getClip();
+      AudioFormat format = _audioStream.getFormat();
+      DataLine.Info info = new DataLine.Info(Clip.class, format);
+      _audioClip = (Clip)AudioSystem.getLine(info);
       _audioClip.open(_audioStream);
       _audioClip.start();
     } catch (LineUnavailableException ex) {
@@ -397,122 +399,122 @@ public class AdamperChat extends javax.swing.JFrame {
   }
 
   @SuppressWarnings("unchecked")
-  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-  private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-    messageTextField = new javax.swing.JTextField();
-    logoutBtn = new javax.swing.JButton();
-    messageFieldLabel = new javax.swing.JLabel();
-    sendBtn = new javax.swing.JButton();
-    connectBtn = new javax.swing.JButton();
-    jScrollPane2 = new javax.swing.JScrollPane();
-    mainTextArea = new javax.swing.JTextPane();
-    displayOnlineUsersBtn = new javax.swing.JButton();
-    clearScreenBtn = new javax.swing.JButton();
+        messageTextField = new javax.swing.JTextField();
+        logoutBtn = new javax.swing.JButton();
+        messageFieldLabel = new javax.swing.JLabel();
+        sendBtn = new javax.swing.JButton();
+        connectBtn = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        mainTextArea = new javax.swing.JTextPane();
+        displayOnlineUsersBtn = new javax.swing.JButton();
+        clearScreenBtn = new javax.swing.JButton();
 
-    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("AdamperChat");
-    setAutoRequestFocus(false);
-    setEnabled(false);
-    setIconImages(null);
-    setMinimumSize(new java.awt.Dimension(410, 340));
-    setPreferredSize(new java.awt.Dimension(410, 340));
-    addWindowListener(new java.awt.event.WindowAdapter() {
-      public void windowClosing(java.awt.event.WindowEvent evt) {
-        formWindowClosing(evt);
-      }
-    });
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("AdamperChat");
+        setAutoRequestFocus(false);
+        setEnabled(false);
+        setIconImages(null);
+        setMinimumSize(new java.awt.Dimension(410, 340));
+        setPreferredSize(new java.awt.Dimension(410, 340));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
-    logoutBtn.setText("Rozłącz");
-    logoutBtn.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        logoutBtnActionPerformed(evt);
-      }
-    });
+        logoutBtn.setText("Rozłącz");
+        logoutBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutBtnActionPerformed(evt);
+            }
+        });
 
-    messageFieldLabel.setText("Treść wiadomości");
+        messageFieldLabel.setText("Treść wiadomości");
 
-    sendBtn.setText("Wyślij");
-    sendBtn.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        sendBtnActionPerformed(evt);
-      }
-    });
+        sendBtn.setText("Wyślij");
+        sendBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendBtnActionPerformed(evt);
+            }
+        });
 
-    connectBtn.setText("Połącz");
-    connectBtn.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        connectBtnActionPerformed(evt);
-      }
-    });
+        connectBtn.setText("Połącz");
+        connectBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectBtnActionPerformed(evt);
+            }
+        });
 
-    mainTextArea.setEditable(false);
-    jScrollPane2.setViewportView(mainTextArea);
+        mainTextArea.setEditable(false);
+        jScrollPane2.setViewportView(mainTextArea);
 
-    displayOnlineUsersBtn.setText("Wyświetl użytkowników online");
-    displayOnlineUsersBtn.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        displayOnlineUsersBtnActionPerformed(evt);
-      }
-    });
+        displayOnlineUsersBtn.setText("Wyświetl użytkowników online");
+        displayOnlineUsersBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                displayOnlineUsersBtnActionPerformed(evt);
+            }
+        });
 
-    clearScreenBtn.setText("Wyczyść ekran");
-    clearScreenBtn.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        clearScreenBtnActionPerformed(evt);
-      }
-    });
+        clearScreenBtn.setText("Wyczyść ekran");
+        clearScreenBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearScreenBtnActionPerformed(evt);
+            }
+        });
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(messageFieldLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jScrollPane2)
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(messageTextField)
-            .addGap(10, 10, 10)
-            .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(connectBtn)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(0, 0, Short.MAX_VALUE))
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addGap(0, 93, Short.MAX_VALUE)
-            .addComponent(clearScreenBtn)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(displayOnlineUsersBtn)))
-        .addContainerGap())
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addGap(10, 10, 10)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(connectBtn))
-        .addGap(10, 10, 10)
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-        .addGap(10, 10, 10)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(displayOnlineUsersBtn)
-          .addComponent(clearScreenBtn))
-        .addGap(10, 10, 10)
-        .addComponent(messageFieldLabel)
-        .addGap(5, 5, 5)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(sendBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-          .addComponent(messageTextField))
-        .addGap(10, 10, 10))
-    );
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(messageFieldLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(messageTextField)
+                        .addGap(10, 10, 10)
+                        .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(connectBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 93, Short.MAX_VALUE)
+                        .addComponent(clearScreenBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(displayOnlineUsersBtn)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(connectBtn))
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(displayOnlineUsersBtn)
+                    .addComponent(clearScreenBtn))
+                .addGap(10, 10, 10)
+                .addComponent(messageFieldLabel)
+                .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(sendBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(messageTextField))
+                .addGap(10, 10, 10))
+        );
 
-    pack();
-    setLocationRelativeTo(null);
-  }// </editor-fold>//GEN-END:initComponents
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
 
   private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
     disconnectFromServer();
@@ -559,16 +561,16 @@ public class AdamperChat extends javax.swing.JFrame {
       sendMsg();
     }
   };
-  // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton clearScreenBtn;
-  private javax.swing.JButton connectBtn;
-  private javax.swing.JButton displayOnlineUsersBtn;
-  private javax.swing.JScrollPane jScrollPane2;
-  private javax.swing.JButton logoutBtn;
-  private javax.swing.JTextPane mainTextArea;
-  private javax.swing.JLabel messageFieldLabel;
-  private javax.swing.JTextField messageTextField;
-  private javax.swing.JButton sendBtn;
-  // End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton clearScreenBtn;
+    private javax.swing.JButton connectBtn;
+    private javax.swing.JButton displayOnlineUsersBtn;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton logoutBtn;
+    private javax.swing.JTextPane mainTextArea;
+    private javax.swing.JLabel messageFieldLabel;
+    private javax.swing.JTextField messageTextField;
+    private javax.swing.JButton sendBtn;
+    // End of variables declaration//GEN-END:variables
 
 }
