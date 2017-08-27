@@ -10,6 +10,8 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.imageio.*;
 import javax.swing.*;
 
@@ -72,7 +74,7 @@ public class LoginBox extends javax.swing.JFrame {
     Message tempMsg = null;
 
     if (!checkNick(username)) {
-      errorAlert("Nick musi być dłuższy niż 3 litery.");
+      errorAlert("Nick musi być dłuższy niż 3 litery i zawierać wyłącznie litery, cyfry oraz znaki _.-");
       return;
     }
 
@@ -120,7 +122,7 @@ public class LoginBox extends javax.swing.JFrame {
       this.setVisible(false);
 
     } else if (!checkNick(username) && !_loggedIn) {
-      errorAlert("Nick musi być dłuższy niż 3 litery.");
+      errorAlert("Nick musi być dłuższy niż 3 litery i zawierać wyłącznie litery, cyfry oraz znaki _.-");
 
     } else if (!responseMsg.equals("") && !_loggedIn) {
       errorAlert(responseMsg.trim());
@@ -128,7 +130,11 @@ public class LoginBox extends javax.swing.JFrame {
   }
 
   private boolean checkNick(String nick) {
-    return !nick.equals("") && nick.length() > 3;
+    Pattern pattern = Pattern.compile("^[a-zA-Z0-9_.-]*$");
+    Matcher matcher = pattern.matcher(nick);
+    boolean checkRegex = matcher.matches();
+    //
+    return !nick.equals("") && (nick.length() > 3) && checkRegex;
   }
 
   private void errorAlert(String text) {

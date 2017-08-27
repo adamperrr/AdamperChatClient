@@ -22,11 +22,11 @@ public class ComingServMsgRunnable implements Runnable {
           case Disconnect:
             _mainFrame.disconnect_ComingServMsg();
             break;
-          case Chat:
-            _mainFrame.chat_ComingServMsg(receivedMsg);
+          case Send:
+            _mainFrame.send_ComingServMsg(receivedMsg);
             break;
-          case Done:
-            _mainFrame.done_ComingServMsg(receivedMsg.getFrom());
+          case Completed:
+            _mainFrame.completed_ComingServMsg(receivedMsg.getFrom());
             break;
         }
       }

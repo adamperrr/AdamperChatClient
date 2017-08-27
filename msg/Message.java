@@ -158,16 +158,16 @@ public class Message {
   }  
   
   private void setType(String type) throws Exception {
-    if (type.equals("Chat")) {
-      setChatType();
+    if (type.equals("Send")) {
+      setSendType();
     } else if (type.equals("Login")) {
       setLoginType();
     } else if (type.equals("Connect")) {
       setConnectType();
     } else if (type.equals("Disconnect")) {
       setDisconnectType();
-    } else if (type.equals("Done")) {
-      setDoneType();
+    } else if (type.equals("Completed")) {
+      setCompletedType();
     } else {
       throw new Exception("Wrong type");
     }
@@ -181,8 +181,8 @@ public class Message {
     }
   }
 
-  private void setChatType() {
-    _type = MsgType.Chat;
+  private void setSendType() {
+    _type = MsgType.Send;
   }
   
   private void setLoginType() {
@@ -197,8 +197,8 @@ public class Message {
     _type = MsgType.Disconnect;
   }
 
-  private void setDoneType() {
-    _type = MsgType.Done;
+  private void setCompletedType() {
+    _type = MsgType.Completed;
   }
 
   private void setFrom(String username) throws Exception {

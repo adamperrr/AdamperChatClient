@@ -2,9 +2,9 @@ package msg;
 
 public enum MsgType {
   None,
-  Chat,
+  Send,
   Login,
   Connect,
   Disconnect,
-  Done
+  Completed
 }

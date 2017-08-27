@@ -240,7 +240,7 @@ public class AdamperChat extends javax.swing.JFrame {
     disconnect();
   }
 
-  public synchronized void chat_ComingServMsg(Message msg) {
+  public synchronized void send_ComingServMsg(Message msg) {
     String from = msg.getFrom();
     String time = msg.getTime();
     String message = msg.getContent();
@@ -255,7 +255,7 @@ public class AdamperChat extends javax.swing.JFrame {
     }
   }
 
-  public synchronized void done_ComingServMsg(String username) {
+  public synchronized void completed_ComingServMsg(String username) {
     stopUsersUpdate();
   }
 
@@ -353,7 +353,7 @@ public class AdamperChat extends javax.swing.JFrame {
 
     if (!messageTextField.getText().equals("")) {
       try {
-        Message tempMsg = new Message(MsgType.Chat, _username, messageTextField.getText());
+        Message tempMsg = new Message(MsgType.Send, _username, messageTextField.getText());
         _writer.println(tempMsg.getMessage());
         _writer.flush();
       } catch (Exception e) {
@@ -541,8 +541,8 @@ public class AdamperChat extends javax.swing.JFrame {
   }//GEN-LAST:event_formWindowClosing
 
   // Loaded properties   
-  private String _host = "localhost"; // Default value - loaded from properties
-  private int _port = 1995; // Default value - loaded from properties
+  private String _host = ""; // Default value - loaded from properties
+  private int _port = -1; // Default value - loaded from properties
   private boolean _soundOn = false; // Default value - loaded from properties
   private boolean _updatingUsersList = false; // Flag of updating users list
   private String _username = "username"; // Will be overrided by usermane from LoginBox from
